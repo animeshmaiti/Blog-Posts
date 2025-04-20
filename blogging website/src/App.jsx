@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import { Navbar } from './components/Navbar/Navbar';
-import { UserAuthForm } from './pages/UserAuth/userAuthForm';
+import { UserAuthForm } from './pages/UserAuthForm';
 
 const App = () => {
     return (
