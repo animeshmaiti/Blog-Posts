@@ -1,5 +1,8 @@
 import express from 'express';
+import cors from 'cors';
+// import cookieParser from 'cookie-parser';
 import { configDotenv } from "dotenv";
+
 import mongoConnect from './db/mongoConnect.js';
 import router from './routes/authRoute.js';
 
@@ -8,6 +11,11 @@ const server = express();
 
 const PORT = process.env.PORT || 3000;
 server.use(express.json());
+server.use(cors({
+    origin:'*',
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true,
+}));
 
 
 server.get('/', (req, res) => {
