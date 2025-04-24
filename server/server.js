@@ -1,15 +1,15 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import { configDotenv } from "dotenv";
+import { configDotenv } from 'dotenv';
 
 import mongoConnect from './db/mongoConnect.js';
 import router from './routes/authRoute.js';
 
 configDotenv();
 const server = express();
-
 const PORT = process.env.PORT || 3000;
+
 server.use(express.json());
 server.use(cookieParser());
 server.use(cors({
@@ -17,7 +17,6 @@ server.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
-
 
 server.get('/', (req, res) => {
     res.send('Hello World!');
