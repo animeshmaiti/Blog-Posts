@@ -3,7 +3,7 @@ import { useState } from 'react'
 export const SearchBox = () => {
 
     const [searchBoxVisible, setSearchBoxVisible] = useState(false);
-    console.log(searchBoxVisible);
+    // console.log(searchBoxVisible);
 
     return (
         <>

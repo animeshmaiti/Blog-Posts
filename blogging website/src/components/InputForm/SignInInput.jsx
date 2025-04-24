@@ -1,6 +1,6 @@
 import React from 'react'
 
-export const SignIn = ({ email, password }) => {
+export const SignInInput = ({ email, password }) => {
     return (
         <>
             <div className='relative w-[100%] mb-4'>

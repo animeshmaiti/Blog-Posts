@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
 
-export const SignUp = ({ fullname, email, password }) => {
+
+export const SignUpInput = ({ fullname, email, password, cPassword }) => {
     return (
         <>
             <div className='relative w-[100%] mb-4'>
                 <input
-                    name='fullName'
+                    name='fullname'
                     type='text'
                     placeholder='Full Name'
                     defaultValue={fullname}
@@ -29,6 +29,16 @@ export const SignUp = ({ fullname, email, password }) => {
                     type='password'
                     placeholder='Password'
                     defaultValue={password}
+                    className='input-box'
+                />
+                <i className='fi fi-rr-key input-icon'></i>
+            </div>
+            <div className='relative w-[100%] mb-4'>
+                <input
+                    name='cPassword'
+                    type='password'
+                    placeholder='Confirm Password'
+                    defaultValue={cPassword}
                     className='input-box'
                 />
                 <i className='fi fi-rr-key input-icon'></i>

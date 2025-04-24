@@ -1,29 +1,91 @@
-import React from 'react'
-import { SignUp } from '../components/InputForm/SignUp'
+import { SignUpInput } from '../components/InputForm/SignUpInput'
 import google from '@assets/google.png'
 import { Link } from 'react-router-dom'
-import { SignIn } from '../components/InputForm/SignIn'
+import { SignInInput } from '../components/InputForm/SignInInput'
 import { AnimationWrapper } from '../common/page-animation'
+import { Toaster, toast } from 'react-hot-toast'
+import { useAuth } from '../context/authContext'
 
 export const UserAuthForm = ({ type }) => {
+    let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
+
+    const { Login, SignUp, isValid } = useAuth();
+
+    const handleSubmitLogin = async () => {
+        const formData = new FormData(formElement);
+        const data = Object.fromEntries(formData.entries());
+        // console.log(data);
+        const { email, password } = data;
+        if (!email || !password) {
+            return toast.error('Please fill the all fields');
+        }
+        if (!emailRegex.test(email)) {
+            return toast.error('Email is not valid');
+        }
+        if (!passwordRegex.test(password)) {
+            return toast.error('Incorrect Password');
+        }
+        Login(data);
+
+    }
+
+
+    const handleSubmitSignUp = async () => {
+        const formData = new FormData(formElement);
+        const data = Object.fromEntries(formData.entries());
+        // console.log(data);
+        const { fullname, email, password, cPassword } = data;
+        if (!fullname || !email || !password || !cPassword) {
+            return toast.error('Please fill the all fields');
+        }
+        if (fullname.length < 3) {
+            return toast.error("Full name must be at least 3 characters long");
+        }
+        if (!emailRegex.test(email)) {
+            return toast.error("Email is not valid");
+        }
+        if (!passwordRegex.test(password)) {
+            return toast.error("Password must be at least 6 characters and at least one uppercase letter, one lowercase letter, and one number");
+        }
+        if (password !== cPassword) {
+            return toast.error("Passwords do not match");
+        }
+        delete data.cPassword;
+        console.log(data);
+        SignUp(data);
+    }
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        console.log(type);
+        if (type === 'sign-in') {
+            handleSubmitLogin();
+        } else {
+            handleSubmitSignUp();
+        }
+    }
+
     return (
         <AnimationWrapper keyValue={type}>
             <section className='h-cover flex items-center justify-center'>
-                <form className='w-[80%] max-w-[400px]'>
+                <Toaster />
+                <form id='formElement' className='w-[80%] max-w-[400px]'>
                     <h1 className='text-4xl font-gelasio capitalize text-center mb-24'>
                         {type === 'sign-in' ? 'Welcome back' : 'Join us today'}
                     </h1>
                     {
                         type !== 'sign-in' ?
-                            <SignUp />
+                            <SignUpInput />
                             :
-                            <SignIn />
+                            <SignInInput />
                     }
                     <button
                         className='btn-dark center mt-14'
                         type='submit'
+                        onClick={handleSubmit}
                     >
-                        {type.replace('-', " ")}
+                        {type.replace('-', ' ')}
                     </button>
                     <div className='relative w-full flex items-center gap-2 my-10 opacity-10 uppercase text-black font-bold'>
                         <hr className='w-1/2 border-black' />
@@ -31,7 +93,7 @@ export const UserAuthForm = ({ type }) => {
                         <hr className='w-1/2 border-black' />
                     </div>
                     <button className='btn-dark flex items-center justify-center gap-4 w-[90%] center'>
-                        <img src={google} alt="logo" className='w-5' />
+                        <img src={google} alt='logo' className='w-5' />
                         Continue with google
                     </button>
                     {
