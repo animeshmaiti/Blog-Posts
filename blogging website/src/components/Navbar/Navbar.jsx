@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import logo from '@assets/logo.png'
 import { Link, Outlet } from 'react-router-dom'
 import { SearchBox } from './SearchBox';
@@ -9,6 +9,13 @@ export const Navbar = () => {
 
   const { isValid, authUser } = useAuth();
   const { profile_img, username, email } = authUser || {};
+  const [userNavPanel, setUserNavPanel] = useState(false);
+
+  const handleBlur = () => {
+    setTimeout(()=>{
+      setUserNavPanel(false)
+    },200)
+  }
 
   return (
     <>
@@ -29,14 +36,17 @@ export const Navbar = () => {
                   <i className='fi fi-rr-bell text-2xl block mt-1'></i>
                 </button>
               </Link>
-              <div>
+              <div className='relative' onClick={() => setUserNavPanel(!userNavPanel)} onBlur={handleBlur}>
                 <button className='w-12 h-12 mt-1'>
-                  <img src={authUser?.profile_img} alt='img' className='w-full h-full object-cover rounded-full' />
+                  <img src={authUser?.profile_img} alt='img' className='w-full h-full object-cover rounded-full' referrerPolicy='no-referrer'/>
                 </button>
-                <UserNavigationPanel/>
+                {
+                  userNavPanel ? <UserNavigationPanel />
+                    : ""
+                }
               </div>
             </>
-            : <>l
+            : <>
               <Link to='/signin' className='btn-dark py-2'>
                 Sign In
               </Link>
