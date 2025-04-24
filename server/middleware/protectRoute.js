@@ -22,7 +22,7 @@ const protectRoute = async(req, res, next) => {
 
     next();
   } catch (error) {
-    console.log('Error in protectRoute: ', error);
+    // console.log('Error in protectRoute: ', error);
     res.status(401).json({ error: 'Unauthorized' });
   }
 };

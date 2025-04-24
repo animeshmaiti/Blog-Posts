@@ -1,10 +1,26 @@
 import express from 'express';
 import { login, logout, signup } from '../controllers/authController.js';
+import protectRoute from '../middleware/protectRoute.js';
 
 const router = express.Router();
 
-router.post('/signup',signup);
-router.post('/login',login);
-router.post('/logout',logout);
+router.post('/signup', signup);
+router.post('/login', login);
+router.post('/logout', logout);
+router.get('/validate', protectRoute, (req, res) => {
+    const {
+        personal_info: { fullname, username, email, profile_img },
+        account_info,
+        social_links
+      } = req.user;
+      res.status(200).json({
+        fullname,
+        username,
+        email,
+        profile_img,
+        account_info,
+        social_links
+      });
+});
 
 export default router;

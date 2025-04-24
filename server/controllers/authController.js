@@ -37,7 +37,7 @@ export const signup = async (req, res) => {
             }
             return username;
         }
-        
+
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
         const newUser = new User({
@@ -84,11 +84,14 @@ export const login = async (req, res) => {
     }
     try {
         const user = await User.findOne({ "personal_info.email": email });
-        const isMatch = await bcrypt.compare(password, user.personal_info.password);
-        if (!user || !isMatch) {
+        if (!user) {
             return res.status(400).json({ error: "Invalid credentials" });
         }
-       
+        const isMatch = await bcrypt.compare(password, user.personal_info.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: "Invalid credentials" });
+        }
+        
         generateTokenAndSetCookie(user._id, res);
         console.log("User logged in successfully");
         return res.status(200).json({

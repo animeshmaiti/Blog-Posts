@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-// import cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import { configDotenv } from "dotenv";
 
 import mongoConnect from './db/mongoConnect.js';
@@ -11,8 +11,9 @@ const server = express();
 
 const PORT = process.env.PORT || 3000;
 server.use(express.json());
+server.use(cookieParser());
 server.use(cors({
-    origin:'*',
+    origin:'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
