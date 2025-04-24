@@ -1,6 +1,6 @@
 import { SignUpInput } from '../components/InputForm/SignUpInput'
 import google from '@assets/google.png'
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
 import { SignInInput } from '../components/InputForm/SignInInput'
 import { AnimationWrapper } from '../common/page-animation'
 import { Toaster, toast } from 'react-hot-toast'
@@ -10,7 +10,7 @@ export const UserAuthForm = ({ type }) => {
     let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
-    const { Login, SignUp, isValid } = useAuth();
+    const { Login, SignUp, isValid, GoogleAuth } = useAuth();
 
     const handleSubmitLogin = async () => {
         const formData = new FormData(formElement);
@@ -56,6 +56,11 @@ export const UserAuthForm = ({ type }) => {
         SignUp(data);
     }
 
+    const handleGoogleAuth = async (e) => {
+        e.preventDefault();
+        GoogleAuth();
+    }
+
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(type);
@@ -66,7 +71,7 @@ export const UserAuthForm = ({ type }) => {
         }
     }
 
-    return (
+    return (isValid ? Navigate('/') :
         <AnimationWrapper keyValue={type}>
             <section className='h-cover flex items-center justify-center'>
                 <Toaster />
@@ -92,7 +97,7 @@ export const UserAuthForm = ({ type }) => {
                         <p>or</p>
                         <hr className='w-1/2 border-black' />
                     </div>
-                    <button className='btn-dark flex items-center justify-center gap-4 w-[90%] center'>
+                    <button className='btn-dark flex items-center justify-center gap-4 w-[90%] center' on onClick={handleGoogleAuth}>
                         <img src={google} alt='logo' className='w-5' />
                         Continue with google
                     </button>

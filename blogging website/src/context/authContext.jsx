@@ -1,12 +1,13 @@
-import { createContext, useContext, useState,useEffect } from "react";
-import { toast } from "react-hot-toast";
-import axios from "axios";
+import { createContext, useContext, useState, useEffect } from 'react';
+import { toast } from 'react-hot-toast';
+import axios from 'axios';
+import { authWithGoogle } from '../common/firebase';
 
 export const authContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(
-    JSON.parse(localStorage.getItem("user")) || null
+    JSON.parse(localStorage.getItem('user')) || null
   );
   const [isValid, setIsValid] = useState(false);
   // const [loading, setLoading] = useState(false);
@@ -21,7 +22,7 @@ export const AuthProvider = ({ children }) => {
       console.log(response.data);
       const data = response.data;
       toast.success('Login successful');
-      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem('user', JSON.stringify(data));
       setAuthUser(data);
       setIsValid(true); // set user valid
       // console.log(data);
@@ -37,7 +38,7 @@ export const AuthProvider = ({ children }) => {
       setAuthUser(null);
     } finally {
       // setLoading(false);
-      console.log("Login function executed");
+      console.log('Login function executed');
     }
   };
 
@@ -51,7 +52,7 @@ export const AuthProvider = ({ children }) => {
       console.log(response.data);
       const data = response.data;
       toast.success('Login successful');
-      localStorage.setItem("user", JSON.stringify(data));
+      localStorage.setItem('user', JSON.stringify(data));
       setAuthUser(data);
       setIsValid(true);
     } catch (err) {
@@ -66,17 +67,78 @@ export const AuthProvider = ({ children }) => {
       setAuthUser(null);
     } finally {
       // setLoading(false);
-      console.log("SignUp function executed");
+      console.log('SignUp function executed');
     }
     // console.log(data);
   };
+
+  // ==================Google Auth=======================
+  const GoogleAuth = async () => {
+    // setLoading(true);
+    try {
+      const { token, user } = await authWithGoogle(); // get Firebase user + ID token
+
+      const response = await axios.post('http://localhost:3000/api/auth/google-auth', {
+        access_token: token,
+      }, {
+        withCredentials: true,
+      });
+
+      const data = response.data;
+      toast.success('Google Sign-in successful');
+      localStorage.setItem('user', JSON.stringify(data));
+      setAuthUser(data);
+      setIsValid(true);
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data);
+        toast.error(err.response?.data?.error || 'Google Sign-in failed');
+      } else {
+        console.log(err.message);
+        toast.error('Server unreachable. Please try again later.');
+      }
+      setIsValid(false);
+      setAuthUser(null);
+    } finally {
+      // setLoading(false);
+      console.log('GoogleAuth function executed');
+    }
+  };
+
+
+  // ===================Logout=======================
+  const LogOut = async () => {
+    // setLoading(true);
+    try {
+      const response = await axios.get('http://localhost:3000/api/auth/logout', {
+        withCredentials: true
+      });
+      console.log(response.data);
+      localStorage.removeItem('user');
+      setAuthUser(null);
+      setIsValid(false); // set user invalid
+      toast.success('Logout successful');
+    } catch (err) {
+      if (err.response) {
+        console.log(err.response.data);
+        toast.error(err.response.data?.error || 'Logout failed');
+      } else {
+        console.log(err.message);
+        toast.error('Server unreachable. Please try again later.');
+      }
+    } finally {
+      // setLoading(false);
+      console.log('Logout function executed');
+    }
+  };
+
   const validateUser = async () => {
     try {
       const res = await axios.get('http://localhost:3000/api/auth/validate', {
         withCredentials: true,
       });
       console.log(res.data); // user info
-      localStorage.setItem("user", JSON.stringify(res.data));
+      localStorage.setItem('user', JSON.stringify(res.data));
       setIsValid(true); // set user valid
       setAuthUser(res.data); // store user
     } catch (err) {
@@ -91,14 +153,13 @@ export const AuthProvider = ({ children }) => {
       setIsValid(false);
     }
   };
-  // ===================Logout=======================
 
   useEffect(() => {
     validateUser(); // auto-run on app load
   }, []);
 
   return (
-    <authContext.Provider value={{ Login, SignUp, validateUser , authUser, isValid }}>
+    <authContext.Provider value={{ Login, SignUp, LogOut, GoogleAuth, validateUser, authUser, isValid }}>
       {children}
     </authContext.Provider>
   );
