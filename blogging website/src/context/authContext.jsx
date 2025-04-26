@@ -137,7 +137,7 @@ export const AuthProvider = ({ children }) => {
       const res = await axios.get('http://localhost:3000/api/auth/validate', {
         withCredentials: true,
       });
-      console.log(res.data); // user info
+      // console.log(res.data); // user info
       localStorage.setItem('user', JSON.stringify(res.data));
       setIsValid(true); // set user valid
       setAuthUser(res.data); // store user
