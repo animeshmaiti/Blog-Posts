@@ -70,8 +70,10 @@ export const UserAuthForm = ({ type }) => {
             handleSubmitSignUp();
         }
     }
-
-    return (isValid ? Navigate('/') :
+    if (isValid) {
+        return <Navigate to='/' />;
+    }
+    return (
         <AnimationWrapper keyValue={type}>
             <section className='h-cover flex items-center justify-center'>
                 <Toaster />
@@ -97,7 +99,7 @@ export const UserAuthForm = ({ type }) => {
                         <p>or</p>
                         <hr className='w-1/2 border-black' />
                     </div>
-                    <button className='btn-dark flex items-center justify-center gap-4 w-[90%] center' on onClick={handleGoogleAuth}>
+                    <button className='btn-dark flex items-center justify-center gap-4 w-[90%] center' onClick={handleGoogleAuth}>
                         <img src={google} alt='logo' className='w-5' />
                         Continue with google
                     </button>
