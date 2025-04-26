@@ -4,7 +4,8 @@ import cookieParser from 'cookie-parser';
 import { configDotenv } from 'dotenv';
 
 import mongoConnect from './db/mongoConnect.js';
-import router from './routes/authRoute.js';
+import authRoutes from './routes/authRoute.js';
+import createBlogRoutes from './routes/createBlogRoute.js';
 
 configDotenv();
 const server = express();
@@ -22,7 +23,8 @@ server.get('/', (req, res) => {
     res.send('Hello World!');
 });
 
-server.use('/api/auth', router);
+server.use('/api/auth', authRoutes);
+server.use('/api/create', createBlogRoutes);
 
 server.listen(PORT, () => {
     mongoConnect();

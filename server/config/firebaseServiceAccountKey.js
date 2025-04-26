@@ -1,6 +1,3 @@
-import { configDotenv } from "dotenv"
-
-configDotenv()
 export const serviceAccount=() => {
     return {
         type: process.env.FIREBASE_TYPE,
