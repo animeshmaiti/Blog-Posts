@@ -1,47 +1,36 @@
-import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '@assets/logo.png';
-import { AnimationWrapper } from '../../common/page-animation';
-import defaultBanner from '@assets/blog banner.png';
-import { uploadImage } from '../../common/aws';
+import { useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
+import EditorJS from '@editorjs/editorjs';
+
+import defaultBanner from '@assets/blog banner.png';
+import { AnimationWrapper } from '../../common/page-animation';
+import { useEditor } from '../../context/editorContext';
+import { tools } from './tools';
 
 export const BlogEditor = () => {
-    const blogBannerRef = useRef();
+    const { blog, blog: { title, banner, content, tags, desc }, uploadBanner, setBlog, textEditor, setTextEditor, setEditorState } = useEditor();
+
+    useEffect(() => {
+        setTextEditor(new EditorJS({
+            holder: 'textEditor',
+            data: content,
+            tools: tools,
+            placeholder: 'Write your blog content here...',
+        }))
+    }, []);
 
     const handleUploadBanner = async (e) => {
         const imgFile = e.target.files[0];
-        if (!imgFile) return;
-
-        const imgURL = URL.createObjectURL(imgFile);
-        const img = new Image();
-        img.src = imgURL;
-
-        try {
-            await new Promise((resolve, reject) => {
-                img.onload = () => resolve();
-                img.onerror = () => reject(new Error('Failed to load image, try different image'));
-            });
-            let loadingToast = toast.loading('Uploading...');
-            const url = await uploadImage(imgFile);
-            if (url) {
-                toast.dismiss(loadingToast);
-                toast.success('Image uploaded successfully');
-                blogBannerRef.current.src = url;
-            }
-        } catch (error) {
-            toast.dismiss(loadingToast);
-            toast.error(error.message);
-        } finally {
-            URL.revokeObjectURL(imgURL);
-        }
+        uploadBanner(imgFile);
     }
-    const handleTitleKeyDown=(e)=>{
+    const handleTitleKeyDown = (e) => {
         if (e.key === 'Enter') {
             e.preventDefault();
         }
     }
-    const handleTitleChange=(e)=>{
+    const handleTitleChange = (e) => {
         let input = e.target;
         input.style.height = 'auto';
         input.style.height = `${input.scrollHeight}px`;
@@ -49,6 +38,38 @@ export const BlogEditor = () => {
         if (title.length > 100) {
             input.value = title.slice(0, 100);
             toast.error('Title is too long!');
+        }
+        setBlog((prev) => ({ ...prev, title }));
+    }
+    const handleError = (e) => {
+        let img = e.target;
+        img.src = defaultBanner;
+    }
+    const handlePublishEvent = async() => {
+        if (!title.length) {
+            toast.error('Title is required!');
+            return;
+        }
+        if (!banner.length) {
+            toast.error('Banner is required!');
+            return;
+        }
+        // console.log(textEditor);
+        if (textEditor.isReady) {
+            try {
+                const data = await textEditor.save();
+                console.log(data);
+                if (data.blocks.length) {
+                    setBlog((prev) => ({ ...prev, content: data }));
+                    toast.success('Blog is ready to publish!');
+                    setEditorState('publish');
+                } else {
+                    toast.error('Content is required!');
+                }
+            } catch (error) {
+                console.log(error);
+                toast.error(error.message);
+            }
         }
     }
 
@@ -59,10 +80,12 @@ export const BlogEditor = () => {
                     <img src={logo} alt='img' />
                 </Link>
                 <p className='max-md:hidden text-black line-clamp-1 w-full'>
-                    New Blog
+                    {title.length > 0 ? title : 'Blog Title'}
                 </p>
                 <div className='flex gap-4 ml-auto'>
-                    <button className='btn-dark py-2'>
+                    <button className='btn-dark py-2'
+                        onClick={handlePublishEvent}
+                    >
                         Publish
                     </button>
                     <button className='btn-light py-2'>
@@ -77,9 +100,9 @@ export const BlogEditor = () => {
                         <div className='relative aspect-video hover:opacity-80 bg-white border-4 border-grey'>
                             <label>
                                 <img
-                                    src={defaultBanner}
-                                    ref={blogBannerRef}
+                                    src={banner}
                                     className='z-20'
+                                    onError={handleError}
                                 />
                                 <input
                                     id='uploadBanner'
@@ -91,7 +114,7 @@ export const BlogEditor = () => {
                             </label>
                         </div>
                         <textarea
-                            // defaultValue={title}
+                            defaultValue={title}
                             placeholder='Blog Title'
                             className='text-4xl font-medium w-full h-20 outline-none resize-none mt-10 leading tight placeholder:opa city-40 bg-white'
                             onKeyDown={handleTitleKeyDown}
