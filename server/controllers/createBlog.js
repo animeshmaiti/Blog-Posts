@@ -1,5 +1,6 @@
 import aws from 'aws-sdk';
 import { nanoid } from 'nanoid';
+import Blog from '../Schema/Blog.js';
 
 const s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -34,5 +35,37 @@ export const generateUploadURL = async (req, res) => {
 }
 
 export const createBlog = async (req, res) => {
+    const authorId = req.user._id;
+    const { title, desc, banner, tags, content, draft } = req.body;
+    if (!title.length || title.length > 100) {
+        return res.status(403).json({ error: "You must provide blog title under 100 characters" });
+    }
+    if (!draft) {
+        if (!desc.length || desc.length > 200) {
+            return res.status(403).json({ error: "You must provide blog description under 200 characters" });
 
+        }
+        if (!banner.length) {
+            return res.status(403).json({ error: "You must provide blog banner to publish it" });
+
+        }
+        if (!content.blocks.length) {
+            return res.status(403).json({ error: "There must be some blog content to publish it" });
+        }
+        if (!tags.length || tags.length > 10) {
+            return res.status(403).json({ error: "The blog should contain tags it can be maximum of 10" });
+        }
+    }
+    tags = tags.map(tag => tag.toLowerCase());
+    const blogId = title.replace(/[^a-zA-Z0-9]/g, ' ').replace(/\s+/g, "-").trim() + nanoid();
+    const blog = new Blog({
+        blog_id: blogId,
+        title,
+        desc,
+        banner,
+        content,
+        tags,
+        author: authorId,
+        draft:Boolean(draft)
+    })
 }

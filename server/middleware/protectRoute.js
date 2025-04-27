@@ -13,11 +13,12 @@ const protectRoute = async(req, res, next) => {
         return res.status(401).json({ error: 'Unauthorized' });        
     }
 
+    // Exclude password from the user object
     const user = await User.findById(decoded.userId).select('-password');
     if (!user) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
-
+    console.log(user);
     req.user = user;
 
     next();
