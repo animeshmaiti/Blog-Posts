@@ -1,5 +1,18 @@
 {
-    "profile_img": "https://api.dicebear.com/6.x/fun-emoji/svg?seed=Jack",
+    "fullname": "animesh maiti",
     "username": "animesh1",
-    "email": "animesh@yahoo.com"
+    "email": "animesh@yahoo.com",
+    "profile_img": "https://api.dicebear.com/6.x/fun-emoji/svg?seed=Jack",
+    "account_info": {
+        "total_posts": 0,
+        "total_reads": 0
+    },
+    "social_links": {
+        "youtube": "",
+        "instagram": "",
+        "facebook": "",
+        "twitter": "",
+        "github": "",
+        "website": ""
+    }
 }
