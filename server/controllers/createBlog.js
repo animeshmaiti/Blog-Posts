@@ -1,6 +1,7 @@
 import aws from 'aws-sdk';
 import { nanoid } from 'nanoid';
 import Blog from '../Schema/Blog.js';
+import User from '../Schema/User.js';
 
 const s3 = new aws.S3({
     accessKeyId: process.env.AWS_ACCESS_KEY_ID,
@@ -36,7 +37,7 @@ export const generateUploadURL = async (req, res) => {
 
 export const createBlog = async (req, res) => {
     const authorId = req.user._id;
-    const { title, desc, banner, tags, content, draft } = req.body;
+    let { title, desc, banner, tags, content, draft } = req.body;
     if (!title.length || title.length > 100) {
         return res.status(403).json({ error: "You must provide blog title under 100 characters" });
     }
@@ -66,6 +67,20 @@ export const createBlog = async (req, res) => {
         content,
         tags,
         author: authorId,
-        draft:Boolean(draft)
+        draft: Boolean(draft)
     })
+    try {
+        await blog.save().then(blog => {
+            let incrementVal = draft ? 0 : 1;
+            User.findOneAndUpdate({ _id: authorId }, { $inc: { 'account_info.total_posts': incrementVal }, $push: { 'blogs': blog._id } }).then(user => {
+                res.status(200).json({ message: "Blog created successfully", id: blog.blog_id });
+            }).catch(err => {
+                res.status(500).json({ error: "Internal server error" });
+                console.log(err);
+            })
+        })
+    } catch (error) {
+        console.error('Error creating blog', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
 }
