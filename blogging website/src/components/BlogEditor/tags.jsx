@@ -1,8 +1,9 @@
-import React from 'react'
-import { useEditor } from '../../context/editorContext'
+import React, { useContext } from 'react'
+import { EditorContext } from '../../context/editorContext'
 
 export const Tags = ({ tag, tagIndex }) => {
-    let { blog: { tags }, setBlog } = useEditor();
+    
+    let { blog: { tags }, setBlog } = useContext(EditorContext);
 
     const handleDeleteTag = () => {
         tags = tags.filter((t) => t !== tag);

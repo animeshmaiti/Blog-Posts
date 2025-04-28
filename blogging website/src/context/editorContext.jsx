@@ -1,4 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { uploadImage } from '../common/aws';
 import axios from 'axios';
@@ -6,15 +7,16 @@ import axios from 'axios';
 export const EditorContext = createContext();
 
 export const EditorProvider = ({ children }) => {
+    const navigate = useNavigate();
 
     const blogStructure = {
         title: '',
         banner: '',
         content: [],
         tags: [],
-        desc: '',
-        author: { personal_info: {} }
+        desc: ''
     };
+
     const [blog, setBlog] = useState(blogStructure);
     const [editorState, setEditorState] = useState('editor');
     const [textEditor, setTextEditor] = useState({ isReady: false });
@@ -27,14 +29,13 @@ export const EditorProvider = ({ children }) => {
 
         try {
             await new Promise((resolve, reject) => {
-                img.onload = () => resolve();
+                img.onload = resolve;
                 img.onerror = () => reject(new Error('Failed to load image, try different image'));
             });
             const url = await uploadImage(imgFile);
-            // console.log(url);
             if (url) {
                 toast.success('Image uploaded successfully');
-                setBlog((prev) => ({ ...prev, banner: url }));
+                setBlog(prev => ({ ...prev, banner: url }));
             }
         } catch (error) {
             toast.error(error.message);
@@ -42,28 +43,43 @@ export const EditorProvider = ({ children }) => {
         } finally {
             URL.revokeObjectURL(imgURL);
         }
-    }
+    };
 
-    const saveDraft = async () => {
+    const publishBlog = async (e, isDraft) => {
+        e.target.classList.add('disable');
+        const loadingToast = toast.loading(isDraft ? 'Saving draft...' : 'Publishing...');
+        const blogData = { ...blog, draft: isDraft };
+        console.log(blogData);
+
         try {
-            const response = await axios.post('/api/blogs/draft', blog);
+            const response = await axios.post('http://localhost:3000/api/create/create-blog', blogData, {
+                withCredentials: true,
+            });
+
             if (response.status === 200) {
-                toast.success('Draft saved successfully');
+                toast.success(isDraft ? 'Draft saved successfully!' : 'Blog published successfully!');
+                setTimeout(() => navigate('/dashboard/blogs'), 500);
             } else {
-                toast.error('Failed to save draft');
+                toast.error(isDraft?'Failed to save draft!':'Failed to publish blog!');
             }
         } catch (error) {
-            toast.error('Error saving draft: ' + error.message);
+            toast.error(isDraft ? 'Error saving draft':'Error publishing blog');
+            console.error(error);
+        } finally {
+            toast.dismiss(loadingToast);
+            e.target.classList.remove('disable');
         }
-    }
+    };
 
     return (
-        <EditorContext.Provider value={{ uploadBanner, blog, setBlog, editorState, setEditorState, textEditor, setTextEditor }}>
+        <EditorContext.Provider value={{
+            uploadBanner, publishBlog,
+            blog, setBlog, editorState, setEditorState,
+            textEditor, setTextEditor
+        }}>
             {children}
         </EditorContext.Provider>
     );
 };
 
-export const useEditor = () => {
-    return useContext(EditorContext);
-};
+// export const useEditor = () => useContext(EditorContext);

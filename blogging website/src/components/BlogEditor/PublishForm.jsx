@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { AnimationWrapper } from '../../common/page-animation';
 import { Toaster } from 'react-hot-toast';
-import { useEditor } from '../../context/editorContext';
+import { EditorContext } from '../../context/editorContext';
 import { Tags } from './tags';
 import toast from 'react-hot-toast';
 
 export const PublishForm = () => {
-    const { blog, blog: { banner, title, tags, desc, content }, setEditorState, setBlog } = useEditor();
+    const { blog, blog: { banner, title, tags, desc, content }, setEditorState, setBlog, publishBlog } = useContext(EditorContext);
     const characterLimit = 200;
     const tagLimit = 5;
 
@@ -36,13 +36,27 @@ export const PublishForm = () => {
                 if (!tags.includes(tag) && tag.length) {
                     setBlog((prev) => ({ ...prev, tags: [...prev.tags, tag] }));
                 }
-            }else{
+            } else {
                 toast.error(`you can maximum add ${tagLimit} tags`);
             }
             e.target.value = '';
         }
     }
-
+    const handlePublishEvent = (e) => {
+        if (e.target.className.includes("disable")) {
+            return;
+        }
+        if (!title.length) {
+            return toast.error("Write Blog title before publishing")
+        }
+        if (!desc.length || desc.length > characterLimit) {
+            return toast.error(`Write a description about your blog within ${characterLimit} characters to publish`)
+        }
+        if (!tags.length) {
+            return toast.error("Enter at least 1 tag to help us rank your blog")
+        }
+        publishBlog(e, false);
+    }
 
     return (
         <AnimationWrapper>
@@ -86,14 +100,14 @@ export const PublishForm = () => {
                         />
                         {
                             tags.map((tag, index) => {
-                                return <Tags key={index} tag={tag} tagIndex={index}/>
+                                return <Tags key={index} tag={tag} tagIndex={index} />
                             })
                         }
 
                     </div>
                     <p className='mt-1 mb-4 text-dark-grey text-right'>{tagLimit - tags.length} Tags left</p>
                     <button className='btn-dark px-8 mt-5'
-                    // onClick={publishBlog}
+                        onClick={handlePublishEvent}
                     >Publish</button>
                 </div>
             </section>
