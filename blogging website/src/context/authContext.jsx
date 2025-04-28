@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { authWithGoogle } from '../common/firebase';
@@ -10,7 +10,7 @@ export const AuthProvider = ({ children }) => {
     JSON.parse(localStorage.getItem('user')) || null
   );
   const [isValid, setIsValid] = useState(false);
-  // const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // ==================Login=============================
   const Login = async (inputData) => {
@@ -133,6 +133,7 @@ export const AuthProvider = ({ children }) => {
   };
 
   const validateUser = async () => {
+    setLoading(true);
     try {
       const res = await axios.get('http://localhost:3000/api/auth/validate', {
         withCredentials: true,
@@ -151,6 +152,9 @@ export const AuthProvider = ({ children }) => {
       }
       setAuthUser(null);
       setIsValid(false);
+    }finally{
+      setLoading(false);
+      console.log('validateUser function executed');
     }
   };
 
@@ -159,12 +163,9 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <authContext.Provider value={{ Login, SignUp, LogOut, GoogleAuth, validateUser, authUser, isValid }}>
+    <authContext.Provider value={{ Login, SignUp, LogOut, GoogleAuth, validateUser, authUser, isValid, loading }}>
       {children}
     </authContext.Provider>
   );
 };
 
-export const useAuth = () => {
-  return useContext(authContext);
-};

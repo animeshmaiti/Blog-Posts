@@ -1,13 +1,12 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import logo from '@assets/logo.png'
 import { Link, Outlet } from 'react-router-dom'
 import { SearchBox } from './SearchBox';
-import { useAuth } from '../../context/authContext';
+import { authContext} from '../../context/authContext';
 import { UserNavigationPanel } from '../UserNavigation/UserNavigationPanel';
 
 export const Navbar = () => {
-
-  const { isValid, authUser } = useAuth();
+  const { isValid, authUser } = useContext(authContext);
   const { profile_img, username, email } = authUser || {};
   const [userNavPanel, setUserNavPanel] = useState(false);
 

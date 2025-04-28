@@ -4,13 +4,14 @@ import { Link, Navigate } from 'react-router-dom'
 import { SignInInput } from '../components/InputForm/SignInInput'
 import { AnimationWrapper } from '../common/page-animation'
 import { Toaster, toast } from 'react-hot-toast'
-import { useAuth } from '../context/authContext'
+import { authContext } from '../context/authContext'
+import { useContext } from 'react'
 
 export const UserAuthForm = ({ type }) => {
     let emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
     let passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,20}$/;
 
-    const { Login, SignUp, isValid, GoogleAuth } = useAuth();
+    const { Login, SignUp, isValid, GoogleAuth } = useContext(authContext);
 
     const handleSubmitLogin = async () => {
         const formData = new FormData(formElement);

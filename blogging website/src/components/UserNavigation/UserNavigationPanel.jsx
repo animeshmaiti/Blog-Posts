@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { AnimationWrapper } from '../../common/page-animation';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../../context/authContext';
+import { authContext } from '../../context/authContext';
 
 export const UserNavigationPanel = () => {
 
-  const { authUser: { username },LogOut } = useAuth();
+  const { authUser: { username }, LogOut } = useContext(authContext);
   const handleLogout = () => {
     LogOut()
   }
