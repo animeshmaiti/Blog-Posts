@@ -6,6 +6,7 @@ import { configDotenv } from 'dotenv';
 import mongoConnect from './db/mongoConnect.js';
 import authRoutes from './routes/authRoute.js';
 import createBlogRoutes from './routes/createBlogRoute.js';
+import getBlogRoutes from './routes/getBlogRoutes.js';
 
 configDotenv();
 const server = express();
@@ -25,6 +26,7 @@ server.get('/', (req, res) => {
 
 server.use('/api/auth', authRoutes);
 server.use('/api/create', createBlogRoutes);
+server.use('/api/blog',getBlogRoutes);
 
 server.listen(PORT, () => {
     mongoConnect();
