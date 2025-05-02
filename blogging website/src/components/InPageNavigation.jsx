@@ -12,7 +12,7 @@ export const InPageNavigation = ({ routes,defaultHidden=[], defaultActiveIndex =
     }
     useEffect(()=>{
         changePageState(activeTabRef.current, defaultActiveIndex);
-    },[])
+    },[routes])
     return (
         <>
             <div className='relative mb-8 bg-white border-b border-grey flex flex-nowrap overflow-x-auto'>
