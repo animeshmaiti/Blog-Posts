@@ -120,7 +120,7 @@ export const BlogEditor = () => {
                                 <input
                                     id='uploadBanner'
                                     type='file'
-                                    accept='.png,.jpg,jpeg'
+                                    accept='.png,.jpg,.jpeg,.webp'
                                     hidden
                                     onChange={handleUploadBanner}
                                 />

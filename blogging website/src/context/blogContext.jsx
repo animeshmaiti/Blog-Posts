@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
+import { filterPaginationData } from '../common/filterPaginationData';
 
 export const blogContext = createContext();
 
@@ -9,14 +10,25 @@ export const BlogProvider = ({ children }) => {
     const navigate = useNavigate();
     const [blogs, setBlogs] = useState(null);
     const [trendingBlogs, setTrendingBlogs] = useState(null);
+    const [countData, setCountData] = useState(null);
 
-    const fetchLatestBlogs = async () => {
+    const fetchLatestBlogs = async ({ page = 1 }) => {
+        // console.log(page);
         try {
-            const response = await axios.get('http://localhost:3000/api/blog/latest-blogs');
-            const blogs = response.data.blogs;
-            console.log(blogs);
+            const response = await axios.post('http://localhost:3000/api/blog/latest-blogs', { page });
+            const blogsData = response.data.blogs;
+            // console.log(blogsData);
+            let formattedData = await filterPaginationData({
+                create_new_arr: page === 1,  // force reset if it's the first page
+                state: countData,
+                data: blogsData,
+                page,
+                countRoute: '/api/blog/all-latest-blogs-count'
+            });
+            // console.log(formattedData);
             if (response.status === 200) {
-                setBlogs(blogs);
+                setCountData(formattedData);
+                setBlogs(formattedData.results);
             } else {
                 toast.error('Failed to fetch latest blogs');
             }
@@ -42,15 +54,26 @@ export const BlogProvider = ({ children }) => {
         }
     }
 
-    const fetchBlogsByCategory = async (category) => {
+    const fetchBlogsByCategory = async ({ category, page = 1 }) => {
         try {
             const response = await axios.post('http://localhost:3000/api/blog/search-blogs', {
-                tag: category
+                tag: category,
+                page: page
             });
-            const blogs = response.data.blogs;
-            console.log(blogs);
+            const blogsData = response.data.blogs;
+            console.log(blogsData);
+            let formattedData = await filterPaginationData({
+                create_new_arr: page === 1,
+                state: countData,
+                data: blogsData,
+                page,
+                countRoute: '/api/blog/search-blogs-count',
+                data_to_send: { tag: category }
+            });
+            console.log(formattedData);
             if (response.status === 200) {
-                setBlogs(blogs);
+                setBlogs(formattedData.results);
+                setCountData(formattedData);
             } else {
                 toast.error('Failed to fetch blogs by category');
             }
@@ -61,7 +84,7 @@ export const BlogProvider = ({ children }) => {
     }
 
     return (
-        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, setBlogs, blogs, trendingBlogs }}>
+        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, setBlogs, blogs, trendingBlogs, countData }}>
             {children}
         </blogContext.Provider>
     );
