@@ -42,11 +42,18 @@ export const getTrendingBlogs = async (req, res) => {
 }
 
 export const searchBlogs = async (req, res) => {
-    let {tag,page}=req.body;
-    if(!tag) return res.status(400).json({error:"Tag is required"});
-    tag = tag.toLowerCase();
+    let {tag,query,page}=req.body;
+    let findQuery;
+    if(query) {
+        findQuery = { draft: false, title: new RegExp(query, 'i') };
+    } else {
+        if(!tag) return res.status(400).json({error:"Tag is required in count search blogs"});
+        tag = tag.toLowerCase();
+        findQuery = { draft: false, tags: tag };
+    }
+    
     try {
-        const blogs = await Blog.find({ draft: false, tags: tag })
+        const blogs = await Blog.find(findQuery)
             .populate('author', 'personal_info.profile_img personal_info.username personal_info.fullname -_id')
             .sort({ 'publishedAt': -1 })
             .select('blog_id title desc banner activity tags publishedAt -_id')
@@ -60,11 +67,18 @@ export const searchBlogs = async (req, res) => {
 }
 
 export const countSearchBlogs=async (req,res)=>{
-    let {tag}=req.body;
-    if(!tag) return res.status(400).json({error:"Tag is required in count search blogs"});
-    tag = tag.toLowerCase();
+    let {tag,query}=req.body;
+    let findQuery;
+    if(query) {
+        findQuery = { draft: false, title: new RegExp(query, 'i') };
+    } else {
+        if(!tag) return res.status(400).json({error:"Tag is required in count search blogs"});
+        tag = tag.toLowerCase();
+        findQuery = { draft: false, tags: tag };
+    }
+    
     try {
-        const count= await Blog.countDocuments({ draft: false, tags: tag });
+        const count= await Blog.countDocuments(findQuery);
         return res.status(200).json({totalDocs:count});
     } catch (error) {
         return res.status(500).json({error:error.message});
