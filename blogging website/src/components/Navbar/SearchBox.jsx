@@ -1,9 +1,19 @@
 import { useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 
 export const SearchBox = () => {
 
     const [searchBoxVisible, setSearchBoxVisible] = useState(false);
+    const navigate=useNavigate();
     // console.log(searchBoxVisible);
+    const handleSearch = (e) => {
+        if (e.key === 'Enter') {
+            const searchQuery = e.target.value.trim();
+            if (searchQuery) {
+                navigate(`/search/${searchQuery}`);
+            }
+        }
+    }
 
     return (
         <>
@@ -12,6 +22,7 @@ export const SearchBox = () => {
                     type='text'
                     placeholder='Search'
                     className='w-full md:w-auto bg-grey p-4 pl-6 pr-[12%] md:pr-6 rounded-full placeholder:text-dark-grey md:pl-12'
+                    onKeyDown={handleSearch}
                 />
                 <i className='fi fi-br-search absolute right-[10%] md:pointer-events-none md:left-5 top-1/2 -translate-y-1/2 text-xl text-dark-grey'></i>
             </div>

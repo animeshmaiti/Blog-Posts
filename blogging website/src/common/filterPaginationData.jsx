@@ -10,7 +10,7 @@ export const filterPaginationData = async ({
 }) => {
     let obj;
     if (state != null && !create_new_arr) {
-        console.log(state);
+        // console.log(state);
         obj = { ...state, results: [...state.results, ...data], page: page };
     } else {
         try{
@@ -25,6 +25,6 @@ export const filterPaginationData = async ({
             console.error(err);
         }
     }
-    console.log(obj);
+    // console.log(obj);
     return obj;
 }

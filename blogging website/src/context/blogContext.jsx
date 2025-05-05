@@ -61,7 +61,7 @@ export const BlogProvider = ({ children }) => {
                 page: page
             });
             const blogsData = response.data.blogs;
-            console.log(blogsData);
+            // console.log(blogsData);
             let formattedData = await filterPaginationData({
                 create_new_arr: page === 1,
                 state: countData,
@@ -70,7 +70,7 @@ export const BlogProvider = ({ children }) => {
                 countRoute: '/api/blog/search-blogs-count',
                 data_to_send: { tag: category }
             });
-            console.log(formattedData);
+            // console.log(formattedData);
             if (response.status === 200) {
                 setBlogs(formattedData.results);
                 setCountData(formattedData);

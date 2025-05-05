@@ -3,6 +3,7 @@ import { Navbar } from './components/Navbar/Navbar';
 import { UserAuthForm } from './pages/UserAuthForm';
 import { Editor } from './pages/Editor';
 import { HomePage } from './pages/HomePage';
+import SearchPage from './pages/SearchPage';
 
 const App = () => {
     return (
@@ -12,6 +13,7 @@ const App = () => {
                 <Route index element={<HomePage/>} />
                 <Route path='signin' element={<UserAuthForm type='sign-in'/>} />
                 <Route path='signup' element={<UserAuthForm type='sign-up'/>} />
+                <Route path='search/:query' element={<SearchPage/>} />
             </Route>
         </Routes>
     )
