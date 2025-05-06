@@ -1,6 +1,6 @@
 import express from 'express';
 
-import protectRoute from '../middleware/protectRoute.js';
+// import protectRoute from '../middleware/protectRoute.js';
 import { getLatestBlogs, getTrendingBlogs, searchBlogs, countLatestBlogs, countSearchBlogs } from '../controllers/getBlog.js';
 
 
