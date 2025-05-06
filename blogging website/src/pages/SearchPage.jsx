@@ -8,13 +8,18 @@ import Loader from '../components/Loader';
 import axios from 'axios';
 import { filterPaginationData } from '../common/filterPaginationData';
 import LoadMoreDataBtn from '../components/BlogPost/LoadMoreDataBtn';
+import UserCard from '../components/UserCard';
 
 
 
 const SearchPage = () => {
+
+  const { query } = useParams()
+
   const [blogs, setBlogs] = useState(null);
   const [countData, setCountData] = useState(null);
-  const { query } = useParams()
+  const [users, setUsers] = useState(null);
+
   const searchBlogs = async ({ page = 1, create_new_arr = false }) => {
     try {
       const response = await axios.post('http://localhost:3000/api/blog/search-blogs', {
@@ -43,10 +48,39 @@ const SearchPage = () => {
     }
   }
 
-  useEffect(()=>{
+  const searchUsers = async () => {
+    try {
+      const response = await axios.post('http://localhost:3000/api/user/search-users', { query });
+      const usersData = response.data.users;
+      setUsers(usersData);
+      console.log(usersData);
+    } catch (error) {
+
+    }
+  }
+
+  const UserCardWrapper = () => {
+    return (
+      <>
+        {
+          users === null ? <Loader /> :
+            users.length ? users.map((user, index) => {
+              return <AnimationWrapper key={index} transition={{ duration: 1, delay: index * 0.8 }}>
+                <UserCard user={user} />
+              </AnimationWrapper>
+            }) :
+              <NoDataMessage message="No users matched" />
+        }
+      </>
+    )
+  }
+
+  useEffect(() => {
     setBlogs(null);
+    setUsers(null);
     searchBlogs({ page: 1, create_new_arr: true })
-  },[query])
+    searchUsers();
+  }, [query])
   return (
     <section className="h-cover flex justify-center gap-10">
       <div className="w-full">
@@ -79,7 +113,12 @@ const SearchPage = () => {
               fetchDataFun={searchBlogs}
             />
           </>
+          <UserCardWrapper />
         </InPageNavigation>
+      </div>
+      <div className='min-w-[40%] lg:min-w-[250px] max-w-min border-l border-grey pl-8 pt-3 max-md:hidden'>
+        <h1 className='font-medium text-xl mb-8'>User related to search <i className='fi fi-rr-user mt-1'></i></h1>
+        <UserCardWrapper/>
       </div>
     </section>
   )
