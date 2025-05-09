@@ -9,6 +9,7 @@ export const SearchBox = () => {
     const handleSearch = (e) => {
         if (e.key === 'Enter') {
             const searchQuery = e.target.value.trim();
+            setSearchBoxVisible(false);
             if (searchQuery) {
                 navigate(`/search/${searchQuery}`);
             }

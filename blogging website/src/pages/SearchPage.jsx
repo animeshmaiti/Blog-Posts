@@ -41,10 +41,11 @@ const SearchPage = () => {
         setBlogs(formattedData.results);
         setCountData(formattedData);
       } else {
-        toast.error('Failed to fetch blogs by category');
+        toast.error('Failed to fetch blogs');
       }
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
+      setBlogs([]);
     }
   }
 
@@ -54,8 +55,12 @@ const SearchPage = () => {
       const usersData = response.data.users;
       setUsers(usersData);
       console.log(usersData);
+      if (response.status===404) {
+        setUsers([]);
+      }
     } catch (error) {
-
+      console.log(error.message);
+      setUsers([]);
     }
   }
 
