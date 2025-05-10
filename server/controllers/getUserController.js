@@ -18,7 +18,7 @@ export const getProfile = async (req, res) => {
     const { username } = req.body;
     try {
         const profile = await User.findOne({ 'personal_info.username': username })
-            .select('-personal_info.password -google_auth -updatedAt -blogs -_id');
+            .select('-personal_info.password -google_auth -updatedAt -blogs');
         if (!profile) return res.status(404).json({ error: "User not found" });
         return res.status(200).json(profile);
     } catch (error) {

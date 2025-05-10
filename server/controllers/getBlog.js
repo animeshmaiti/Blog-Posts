@@ -42,14 +42,17 @@ export const getTrendingBlogs = async (req, res) => {
 }
 
 export const searchBlogs = async (req, res) => {
-    let {tag,query,page}=req.body;
+    let {tag,query,author,page}=req.body;
     let findQuery;
     if(query) {
         findQuery = { draft: false, title: new RegExp(query, 'i') };
-    } else {
-        if(!tag) return res.status(400).json({error:"Tag is required in count search blogs"});
+    } else if(tag) {
         tag = tag.toLowerCase();
         findQuery = { draft: false, tags: tag };
+    }else if(author) {
+        findQuery = { draft: false, author: author };
+    }else{
+        return res.status(400).json({error:"Tag or query or author is required in search blogs"});
     }
     
     try {
@@ -67,16 +70,19 @@ export const searchBlogs = async (req, res) => {
 }
 
 export const countSearchBlogs=async (req,res)=>{
-    let {tag,query}=req.body;
+    let {tag,author,query}=req.body;
     let findQuery;
     if(query) {
         findQuery = { draft: false, title: new RegExp(query, 'i') };
-    } else {
-        if(!tag) return res.status(400).json({error:"Tag is required in count search blogs"});
+    } else if(tag) {
         tag = tag.toLowerCase();
         findQuery = { draft: false, tags: tag };
+    }else if(author) {
+        findQuery = { draft: false, author: author };
+    }else{
+        return res.status(400).json({error:"Tag or query or author is required in search blogs"});
     }
-    
+
     try {
         const count= await Blog.countDocuments(findQuery);
         return res.status(200).json({totalDocs:count});
