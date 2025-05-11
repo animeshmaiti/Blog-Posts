@@ -9,6 +9,7 @@ export const blogContext = createContext();
 export const BlogProvider = ({ children }) => {
     const navigate = useNavigate();
     const [blogs, setBlogs] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [trendingBlogs, setTrendingBlogs] = useState(null);
     const [countData, setCountData] = useState(null);
 
@@ -83,8 +84,28 @@ export const BlogProvider = ({ children }) => {
         }
     }
 
+    const fetchBlog = async (blog_id) => {
+        try {
+            const response = await axios.post('http://localhost:3000/api/blog/get-blog', { blog_id });
+            const blogData = response.data.blog;
+            // console.log(blogData);
+            if (response.status === 200) {
+                setLoading(false);
+                return blogData;
+            } else {
+                toast.error('Failed to fetch blog');
+                navigate('/404');
+            }
+        } catch (error) {
+            setLoading(false);
+            toast.error('Failed to fetch blog');
+            console.error(error);
+            navigate('/404');
+        }
+    }
+
     return (
-        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, setBlogs, blogs, trendingBlogs, countData }}>
+        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory,fetchBlog, setBlogs, blogs, trendingBlogs, countData,loading }}>
             {children}
         </blogContext.Provider>
     );
