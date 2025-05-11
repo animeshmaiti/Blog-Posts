@@ -1,4 +1,5 @@
 import Blog from "../Schema/Blog.js"
+import User from "../Schema/User.js";
 
 export const getLatestBlogs = async (req, res) => {
     let{ page } = req.body;
@@ -88,5 +89,29 @@ export const countSearchBlogs=async (req,res)=>{
         return res.status(200).json({totalDocs:count});
     } catch (error) {
         return res.status(500).json({error:error.message});
+    }
+}
+
+export const getBlogById = async (req, res) => {
+    const { blog_id } = req.body;
+    try {
+        const blog = await Blog.findOneAndUpdate({ blog_id: blog_id }, { $inc: { 'activity.total_reads': 1 } }, { new: true })
+            .populate('author', 'personal_info.profile_img personal_info.username personal_info.fullname')
+            .select('blog_id title desc content banner activity tags publishedAt');
+        if (!blog) {
+            return res.status(404).json({ error: "Blog not found" });
+        }
+        User.findOneAndUpdate(
+            { _id: blog.author },
+            { $inc: { 'account_info.total_reads': 1 } },
+            { new: true }
+        ).then(() => {
+            console.log("User's total reads updated");
+        }).catch((error) => {
+            console.error("Error updating user's total reads:", error);
+        });
+        return res.status(200).json({ blog });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
     }
 }
