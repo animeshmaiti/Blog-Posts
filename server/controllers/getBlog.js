@@ -43,13 +43,13 @@ export const getTrendingBlogs = async (req, res) => {
 }
 
 export const searchBlogs = async (req, res) => {
-    let { tag, query, author, page } = req.body;
+    let { tag, query, author, page, limit,exclude_blog } = req.body;
     let findQuery;
     if (query) {
         findQuery = { draft: false, title: new RegExp(query, 'i') };
     } else if (tag) {
         tag = tag.toLowerCase();
-        findQuery = { draft: false, tags: tag };
+        findQuery = { draft: false, tags: tag,blog_id: { $ne: exclude_blog } };
     } else if (author) {
         findQuery = { draft: false, author: author };
     } else {
@@ -62,7 +62,7 @@ export const searchBlogs = async (req, res) => {
             .sort({ 'publishedAt': -1 })
             .select('blog_id title desc banner activity tags publishedAt -_id')
             .skip((page - 1) * 5)
-            .limit(5);
+            .limit(limit ? limit : 5);
 
         return res.status(200).json({ blogs });
     } catch (error) {
