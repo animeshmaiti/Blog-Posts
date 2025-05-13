@@ -7,11 +7,28 @@ import { filterPaginationData } from '../common/filterPaginationData';
 export const blogContext = createContext();
 
 export const BlogProvider = ({ children }) => {
+    const blogDataStructure = {
+        title: '',
+        desc: '',
+        content: [],
+
+        author: { personal_info: {} },
+        banner: '',
+        publishedAt: '',
+        comments: { results: [] },
+
+        activity: {
+            total_comments: [],
+            total_likes: [],
+        },
+    }
     const navigate = useNavigate();
     const [blogs, setBlogs] = useState(null);
     const [loading, setLoading] = useState(true);
     const [trendingBlogs, setTrendingBlogs] = useState(null);
     const [countData, setCountData] = useState(null);
+    const [blog, setBlog] = useState(blogDataStructure);
+    const [similarBlogs, setSimilarBlogs] = useState(null);
 
     const fetchLatestBlogs = async ({ page = 1 }) => {
         // console.log(page);
@@ -88,10 +105,12 @@ export const BlogProvider = ({ children }) => {
         try {
             const response = await axios.post('http://localhost:3000/api/blog/get-blog', { blog_id });
             const blogData = response.data.blog;
+            const suggestedBlogs = await axios.post('http://localhost:3000/api/blog/search-blogs', { tag: blogData.tags[0], limit: 5,exclude_blog: blog_id });
             // console.log(blogData);
-            if (response.status === 200) {
+            if (response.status === 200 && suggestedBlogs.status === 200) {
                 setLoading(false);
-                return blogData;
+                setSimilarBlogs(suggestedBlogs.data.blogs);
+                setBlog(blogData);
             } else {
                 toast.error('Failed to fetch blog');
                 navigate('/404');
@@ -105,7 +124,7 @@ export const BlogProvider = ({ children }) => {
     }
 
     return (
-        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory,fetchBlog, setBlogs, blogs, trendingBlogs, countData,loading }}>
+        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, fetchBlog, setBlogs, blogs, trendingBlogs, countData, loading, blog, similarBlogs }}>
             {children}
         </blogContext.Provider>
     );

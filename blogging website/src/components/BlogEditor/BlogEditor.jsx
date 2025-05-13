@@ -59,7 +59,6 @@ export const BlogEditor = () => {
         if (textEditor.isReady) {
             try {
                 const data = await textEditor.save();
-                console.log(data);
                 if (data.blocks.length) {
                     setBlog((prev) => ({ ...prev, content: data }));
                     toast.success('Blog is ready to publish!');

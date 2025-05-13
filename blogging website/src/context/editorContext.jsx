@@ -49,7 +49,6 @@ export const EditorProvider = ({ children }) => {
         e.target.classList.add('disable');
         const loadingToast = toast.loading(isDraft ? 'Saving draft...' : 'Publishing...');
         const blogData = { ...blog, draft: isDraft };
-        console.log(blogData);
 
         try {
             const response = await axios.post('http://localhost:3000/api/create/create-blog', blogData, {
