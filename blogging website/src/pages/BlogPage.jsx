@@ -6,6 +6,7 @@ import Loader from '../components/Loader'
 import { getDay } from '../common/date'
 import BlogInteraction from '../components/Blog/BlogInteraction'
 import BlogPostCard from '../components/BlogPost/BlogPostCard'
+import BlogContent from '../components/Blog/BlogContent'
 
 const BlogPage = () => {
   const { blog_id } = useParams()
@@ -23,6 +24,7 @@ const BlogPage = () => {
   useEffect(() => {
     fetchBlog(blog_id)
   }, [blog_id])
+  console.log(content);
   return (
     <AnimationWrapper>
       {loading ? (
@@ -49,7 +51,17 @@ const BlogPage = () => {
           </div>
 
           <BlogInteraction />
-
+          <div className='my-12 front-gelasio blog-page-content'>
+            {
+              content[0].blocks.map((block, index) => {
+                return (
+                  <div key={index} className='my-4 md:my-8'>
+                    <BlogContent block={block} />
+                  </div>
+                )
+              })
+            }
+          </div>
           <BlogInteraction />
           {similarBlogs && similarBlogs.length > 0 && (
             <>
@@ -61,7 +73,7 @@ const BlogPage = () => {
                   author: { personal_info },
                 } = blog
                 return (
-                  <AnimationWrapper key={index} transition={{duration:1,delay:index*0.08}}>
+                  <AnimationWrapper key={index} transition={{ duration: 1, delay: index * 0.08 }}>
                     <BlogPostCard content={blog} author={personal_info} />
                   </AnimationWrapper>
                 )
