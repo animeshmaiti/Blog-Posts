@@ -43,13 +43,13 @@ export const getTrendingBlogs = async (req, res) => {
 }
 
 export const searchBlogs = async (req, res) => {
-    let { tag, query, author, page, limit,exclude_blog } = req.body;
+    let { tag, query, author, page, limit, exclude_blog } = req.body;
     let findQuery;
     if (query) {
         findQuery = { draft: false, title: new RegExp(query, 'i') };
     } else if (tag) {
         tag = tag.toLowerCase();
-        findQuery = { draft: false, tags: tag,blog_id: { $ne: exclude_blog } };
+        findQuery = { draft: false, tags: tag, blog_id: { $ne: exclude_blog } };
     } else if (author) {
         findQuery = { draft: false, author: author };
     } else {
@@ -93,9 +93,9 @@ export const countSearchBlogs = async (req, res) => {
 }
 
 export const getBlogById = async (req, res) => {
-    const { blog_id } = req.body;
+    const { blog_id, draft, mode } = req.body;
     try {
-        const blog = await Blog.findOneAndUpdate({ blog_id: blog_id }, { $inc: { 'activity.total_reads': 1 } }, { new: true })
+        const blog = await Blog.findOneAndUpdate({ blog_id: blog_id }, { $inc: { 'activity.total_reads':mode!='edit'? 1:0 } }, { new: true })
             .populate('author', 'personal_info.profile_img personal_info.username personal_info.fullname')
             .select('blog_id title desc content banner activity tags publishedAt');
         if (!blog) {
@@ -106,6 +106,10 @@ export const getBlogById = async (req, res) => {
             { $inc: { 'account_info.total_reads': 1 } },
             { new: true }
         )
+        if (blog.draft && !draft) {
+            return res.status(500).json({ error: "Blog is in draft mode" });
+
+        }
         return res.status(200).json({ blog });
     } catch (error) {
         return res.status(500).json({ error: error.message });
