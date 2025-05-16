@@ -37,7 +37,7 @@ export const generateUploadURL = async (req, res) => {
 
 export const createBlog = async (req, res) => {
     const authorId = req.user._id;
-    let { title, desc, banner, tags, content, draft } = req.body;
+    let { title, desc, banner, tags, content, draft, id } = req.body;
     if (!title.length || title.length > 100) {
         return res.status(403).json({ error: "You must provide blog title under 100 characters" });
     }
@@ -59,6 +59,7 @@ export const createBlog = async (req, res) => {
     }
     tags = tags.map(tag => tag.toLowerCase());
     const blogId = title.replace(/[^a-zA-Z0-9]/g, ' ').replace(/\s+/g, "-").trim() + nanoid();
+
     const blog = new Blog({
         blog_id: blogId,
         title,
@@ -69,18 +70,36 @@ export const createBlog = async (req, res) => {
         author: authorId,
         draft: Boolean(draft)
     })
-    try {
-        await blog.save().then(blog => {
-            let incrementVal = draft ? 0 : 1;
-            User.findOneAndUpdate({ _id: authorId }, { $inc: { 'account_info.total_posts': incrementVal }, $push: { 'blogs': blog._id } }).then(user => {
-                res.status(200).json({ message: "Blog created successfully", id: blog.blog_id });
-            }).catch(err => {
-                res.status(500).json({ error: "Internal server error" });
-                console.log(err);
+    if (id) {
+        const blog = await Blog.findOne({ blog_id: id });
+        console.log(blog, authorId);
+        if (!blog) {
+            return res.status(404).json({ error: "Blog not found" });
+        }
+        if (authorId.toString() !== blog.author.toString()) {
+            return res.status(403).json({ error: "You are not authorized to update this blog" });
+        }
+        try {
+            await Blog.findOneAndUpdate({ blog_id: id }, { title, desc, banner, content, tags, draft: Boolean(draft) });
+            return res.status(200).json({ message: "Blog updated successfully" });
+        } catch (error) {
+            console.error('Error updating blog', error);
+            return res.status(500).json({ error: 'Internal server error' });
+        }
+    } else {
+        try {
+            await blog.save().then(blog => {
+                let incrementVal = draft ? 0 : 1;
+                User.findOneAndUpdate({ _id: authorId }, { $inc: { 'account_info.total_posts': incrementVal }, $push: { 'blogs': blog._id } }).then(user => {
+                    res.status(200).json({ message: "Blog created successfully", id: blog.blog_id });
+                }).catch(err => {
+                    res.status(500).json({ error: "Internal server error" });
+                    console.log(err);
+                })
             })
-        })
-    } catch (error) {
-        console.error('Error creating blog', error);
-        res.status(500).json({ error: 'Internal server error' });
+        } catch (error) {
+            console.error('Error creating blog', error);
+            res.status(500).json({ error: 'Internal server error' });
+        }
     }
 }

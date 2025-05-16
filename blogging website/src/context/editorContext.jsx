@@ -45,13 +45,13 @@ export const EditorProvider = ({ children }) => {
         }
     };
 
-    const publishBlog = async (e, isDraft) => {
+    const publishBlog = async (e, isDraft,blog_id) => {
         e.target.classList.add('disable');
         const loadingToast = toast.loading(isDraft ? 'Saving draft...' : 'Publishing...');
         const blogData = { ...blog, draft: isDraft };
 
         try {
-            const response = await axios.post('http://localhost:3000/api/create/create-blog', blogData, {
+            const response = await axios.post('http://localhost:3000/api/create/create-blog', {...blogData,id:blog_id}, {
                 withCredentials: true,
             });
 

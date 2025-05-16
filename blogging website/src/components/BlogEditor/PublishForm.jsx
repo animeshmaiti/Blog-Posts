@@ -4,8 +4,10 @@ import { Toaster } from 'react-hot-toast';
 import { EditorContext } from '../../context/editorContext';
 import { Tags } from './tags';
 import toast from 'react-hot-toast';
+import { useParams } from 'react-router-dom';
 
 export const PublishForm = () => {
+    const {blog_id}=useParams();
     const { blog, blog: { banner, title, tags, desc, content }, setEditorState, setBlog, publishBlog } = useContext(EditorContext);
     const characterLimit = 200;
     const tagLimit = 5;
@@ -55,7 +57,7 @@ export const PublishForm = () => {
         if (!tags.length) {
             return toast.error("Enter at least 1 tag to help us rank your blog")
         }
-        publishBlog(e, false);
+        publishBlog(e, false, blog_id);
     }
 
     return (
