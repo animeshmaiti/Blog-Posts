@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import logo from '@assets/logo.png';
 import { useContext, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
@@ -7,19 +7,26 @@ import EditorJS from '@editorjs/editorjs';
 import defaultBanner from '@assets/blog banner.png';
 import { AnimationWrapper } from '../../common/page-animation';
 
-import { tools } from './tools';
+import tools from './tools';
 import { EditorContext } from '../../context/editorContext';
 
 export const BlogEditor = () => {
-    const { blog, blog: { title, banner, content, tags, desc }, uploadBanner, setBlog, textEditor, setTextEditor, setEditorState ,publishBlog} = useContext(EditorContext);
-
+    const { blog, blog: { title, banner, content, tags, desc }, uploadBanner, setBlog, textEditor, setTextEditor, setEditorState, publishBlog } = useContext(EditorContext);
     useEffect(() => {
-        setTextEditor(new EditorJS({
-            holder: 'textEditor',
-            data: content,
-            tools: tools,
-            placeholder: 'Write your blog content here...',
-        }))
+        let editor;
+
+        if (EditorJS) {
+            editor = new EditorJS({
+                holder: 'textEditor',
+                data: Array.isArray(content) ? content[0] : content,
+                tools: tools,
+                placeholder: 'Write your blog content here...',
+            });
+            setTextEditor(editor);
+        }
+        return () => {
+            editor?.destroy?.();
+        };
     }, []);
 
     const handleUploadBanner = async (e) => {
@@ -80,7 +87,7 @@ export const BlogEditor = () => {
         if (!title.length) {
             return toast.error("Write Blog title before saving draft")
         }
-        publishBlog(e,true);
+        publishBlog(e, true);
     }
 
     return (

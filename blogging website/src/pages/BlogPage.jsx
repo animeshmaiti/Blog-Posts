@@ -20,11 +20,11 @@ const BlogPage = () => {
       personal_info: { fullname, username: author_username, profile_img },
     },
     publishedAt,
-  } = blog
+  } = blog;
   useEffect(() => {
     fetchBlog(blog_id)
-  }, [blog_id])
-  console.log(content);
+  }, [blog_id]);
+
   return (
     <AnimationWrapper>
       {loading ? (

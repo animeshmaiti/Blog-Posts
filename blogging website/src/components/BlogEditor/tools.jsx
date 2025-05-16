@@ -27,16 +27,20 @@ const uploadImageByFile = async (e) => {
     })
 }
 
-export const tools = {
+const tools = {
     embed: {
-        class: Embed,
-        config: {
-            services: {
-                youtube: true,
-                coub: true
-            }
-        }
+    class: Embed,
+    toolbox: {
+      title: 'Embed',
+      icon: '<svg width="17" height="14" viewBox="0 0 17 14"><path d="M1 7h15M9 1l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none"/></svg>',
     },
+    config: {
+      services: {
+        youtube: true,
+        coub: true,
+      }
+    }
+  },
     list: {
         class: List,
         inlineToolbar: true
@@ -66,3 +70,5 @@ export const tools = {
     inlineCode: InlineCode,
     code: CodeTool
 }
+
+export default tools;

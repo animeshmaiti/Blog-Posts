@@ -26,7 +26,7 @@ const BlogInteraction = () => {
         </div>
         <div className='flex gap-6 items-center'>
           {
-            username === author_username ? <Link to={`/blog/editor/${blog_id}`} className='underline hover:text-purple'>Edit</Link> : null
+            username === author_username ? <Link to={`/editor/${blog_id}`} className='underline hover:text-purple'>Edit</Link> : null
           }
           <Link to={`http://twitter.com/share?text=Read ${title}&url=${location.href}&hashtags=${tags[0]}`}><i className='fi fi-brands-twitter text-xl hover:text-twitter'></i></Link>
         </div>

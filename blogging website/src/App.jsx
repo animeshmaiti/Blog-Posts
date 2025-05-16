@@ -12,6 +12,7 @@ const App = () => {
     return (
         <Routes>
             <Route path='/editor' element={<Editor/>}/>
+            <Route path='/editor/:blog_id' element={<Editor/>}/>
             <Route path='/' element={<Navbar />}>
                 <Route index element={<HomePage/>} />
                 <Route path='signin' element={<UserAuthForm type='sign-in'/>} />
