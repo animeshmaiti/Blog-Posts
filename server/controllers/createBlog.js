@@ -72,7 +72,6 @@ export const createBlog = async (req, res) => {
     })
     if (id) {
         const blog = await Blog.findOne({ blog_id: id });
-        console.log(blog, authorId);
         if (!blog) {
             return res.status(404).json({ error: "Blog not found" });
         }
