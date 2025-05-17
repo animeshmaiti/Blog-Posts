@@ -29,6 +29,7 @@ export const BlogProvider = ({ children }) => {
     const [countData, setCountData] = useState(null);
     const [blog, setBlog] = useState(blogDataStructure);
     const [similarBlogs, setSimilarBlogs] = useState(null);
+    const [isLikedByUser, setIsLikedByUser] = useState(false);
 
     const fetchLatestBlogs = async ({ page = 1 }) => {
         // console.log(page);
@@ -103,14 +104,17 @@ export const BlogProvider = ({ children }) => {
 
     const fetchBlog = async (blog_id) => {
         try {
-            const response = await axios.post('http://localhost:3000/api/blog/get-blog', { blog_id });
+            const response = await axios.post('http://localhost:3000/api/blog/get-blog', { blog_id },{
+                withCredentials: true
+            });
             const blogData = response.data.blog;
-            const suggestedBlogs = await axios.post('http://localhost:3000/api/blog/search-blogs', { tag: blogData.tags[0], limit: 5,exclude_blog: blog_id });
-            // console.log(blogData);
+            const suggestedBlogs = await axios.post('http://localhost:3000/api/blog/search-blogs', { tag: blogData.tags[0], limit: 5, exclude_blog: blog_id });
+            console.log(response.data);
             if (response.status === 200 && suggestedBlogs.status === 200) {
                 setLoading(false);
                 setSimilarBlogs(suggestedBlogs.data.blogs);
                 setBlog(blogData);
+                setIsLikedByUser(Boolean(response.data.isLikedByUser));
             } else {
                 toast.error('Failed to fetch blog');
                 navigate('/404');
@@ -124,7 +128,7 @@ export const BlogProvider = ({ children }) => {
     }
 
     return (
-        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, fetchBlog, setBlogs, blogs, trendingBlogs, countData, loading, blog, similarBlogs }}>
+        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, fetchBlog, setBlogs, blogs, trendingBlogs, countData, loading, blog, setBlog, similarBlogs, isLikedByUser, setIsLikedByUser }}>
             {children}
         </blogContext.Provider>
     );
