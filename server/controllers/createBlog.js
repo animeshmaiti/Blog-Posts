@@ -102,3 +102,32 @@ export const createBlog = async (req, res) => {
         }
     }
 }
+
+export const likeBlog = async (req, res) => {
+    const user_id = req.user._id;
+    const { _id } = req.body;
+
+    try {
+        const blog = await Blog.findById(_id);
+        if (!blog) {
+            return res.status(404).json({ error: "Blog not found" });
+        }
+
+        const alreadyLiked = blog.activity.likedBy.includes(user_id);
+        const update = {
+            $inc: { 'activity.total_likes': alreadyLiked ? -1 : 1 },
+            [alreadyLiked ? '$pull' : '$addToSet']: { 'activity.likedBy': user_id }
+        };
+
+        const updatedBlog = await Blog.findByIdAndUpdate(_id, update, { new: true });
+
+        res.status(200).json({
+            message: alreadyLiked ? "Like removed" : "Blog liked successfully",
+            blog: updatedBlog,
+        });
+
+    } catch (error) {
+        console.error('Error liking blog', error);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+};

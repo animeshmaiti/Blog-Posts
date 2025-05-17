@@ -93,6 +93,7 @@ export const countSearchBlogs = async (req, res) => {
 }
 
 export const getBlogById = async (req, res) => {
+    const user_id = req.user?._id;
     const { blog_id, draft, mode } = req.body;
     try {
         const blog = await Blog.findOneAndUpdate({ blog_id: blog_id }, { $inc: { 'activity.total_reads':mode!='edit'? 1:0 } }, { new: true })
@@ -110,7 +111,8 @@ export const getBlogById = async (req, res) => {
             return res.status(500).json({ error: "Blog is in draft mode" });
 
         }
-        return res.status(200).json({ blog });
+        const isLikedByUser = user_id ? await blog.activity.likedBy.includes(user_id) : false;
+        return res.status(200).json({ blog, isLikedByUser });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
