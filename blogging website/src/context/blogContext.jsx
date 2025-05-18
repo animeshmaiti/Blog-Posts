@@ -30,6 +30,8 @@ export const BlogProvider = ({ children }) => {
     const [blog, setBlog] = useState(blogDataStructure);
     const [similarBlogs, setSimilarBlogs] = useState(null);
     const [isLikedByUser, setIsLikedByUser] = useState(false);
+    const [commentsWrapper, setCommentsWrapper] = useState(false);
+    const [totalCommentsLoaded, setTotalCommentsLoaded] = useState(0);
 
     const fetchLatestBlogs = async ({ page = 1 }) => {
         // console.log(page);
@@ -128,7 +130,7 @@ export const BlogProvider = ({ children }) => {
     }
 
     return (
-        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, fetchBlog, setBlogs, blogs, trendingBlogs, countData, loading, blog, setBlog, similarBlogs, isLikedByUser, setIsLikedByUser }}>
+        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, fetchBlog, setBlogs, blogs, trendingBlogs, countData, loading, blog, setBlog, similarBlogs, isLikedByUser, setIsLikedByUser,commentsWrapper, setCommentsWrapper, totalCommentsLoaded, setTotalCommentsLoaded }}>
             {children}
         </blogContext.Provider>
     );

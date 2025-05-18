@@ -6,7 +6,7 @@ import { Toaster, toast } from 'react-hot-toast';
 import axios from 'axios';
 
 const BlogInteraction = () => {
-  const { blog: { _id, blog_id, title, tags, activity, activity: { total_likes, total_comments }, author: { personal_info: { username: author_username } } }, setBlog, isLikedByUser, setIsLikedByUser } = useBlog();
+  const { blog: { _id, blog_id, title, tags, activity, activity: { total_likes, total_comments }, author: { personal_info: { username: author_username } } }, setBlog, isLikedByUser, setIsLikedByUser,setCommentsWrapper } = useBlog();
   const { authUser, isValid } = useContext(authContext) || {};
   const username = authUser?.username || '';
 
@@ -34,7 +34,6 @@ const BlogInteraction = () => {
           }
         }))
       }
-      // Call the API to update the like status
 
       try {
         const response = await axios.post('http://localhost:3000/api/create/like-blog', { _id }, {
@@ -62,6 +61,7 @@ const BlogInteraction = () => {
           </button>
           <p className='text-xl text-dark-grey'>{total_likes}</p>
           <button
+            onClick={() => setCommentsWrapper((prev) => !prev)}
             className='w-10 h-10 rounded-full flex items-center justify-center bg-grey/80'
           >
             <i className='fi fi-rr-comment-dots'></i>
