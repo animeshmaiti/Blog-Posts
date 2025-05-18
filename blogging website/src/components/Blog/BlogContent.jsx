@@ -44,7 +44,11 @@ const BlogContent = ({ block }) => {
             <ol className={`pl-5 ${style === 'ordered' ? 'list-decimal' : 'list-disc'}`}>
                 {
                     items.map((listItem, index) => {
-                        return <li key={index} className='my-2' dangerouslySetInnerHTML={{ __html: listItem }}></li>
+                        if(listItem.content){
+                            return <li key={index} className='my-2'>{listItem.content}</li>
+                        }else{
+                            return <li key={index} className='my-2' dangerouslySetInnerHTML={{ __html: listItem}}></li>
+                        }
                     })
                 }
             </ol>
