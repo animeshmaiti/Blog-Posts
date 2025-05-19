@@ -8,6 +8,7 @@ import authRoutes from './routes/authRoute.js';
 import createBlogRoutes from './routes/createBlogRoute.js';
 import getBlogRoutes from './routes/getBlogRoutes.js';
 import getUserRoutes from './routes/getUserRoutes.js';
+import blogInteractionRoutes from './routes/blogInteractionRoutes.js';
 
 configDotenv();
 const server = express();
@@ -29,6 +30,7 @@ server.use('/api/auth', authRoutes);
 server.use('/api/create', createBlogRoutes);
 server.use('/api/blog',getBlogRoutes);
 server.use('/api/user',getUserRoutes);
+server.use('/api/interaction',blogInteractionRoutes);
 
 server.listen(PORT, () => {
     mongoConnect();
