@@ -31,7 +31,7 @@ export const BlogProvider = ({ children }) => {
     const [similarBlogs, setSimilarBlogs] = useState(null);
     const [isLikedByUser, setIsLikedByUser] = useState(false);
     const [commentsWrapper, setCommentsWrapper] = useState(false);
-    const [totalCommentsLoaded, setTotalCommentsLoaded] = useState(0);
+    const [totalParentCommentsLoaded, setTotalParentCommentsLoaded] = useState(0);
 
     const fetchLatestBlogs = async ({ page = 1 }) => {
         // console.log(page);
@@ -111,7 +111,6 @@ export const BlogProvider = ({ children }) => {
             });
             const blogData = response.data.blog;
             const suggestedBlogs = await axios.post('http://localhost:3000/api/blog/search-blogs', { tag: blogData.tags[0], limit: 5, exclude_blog: blog_id });
-            console.log(response.data);
             if (response.status === 200 && suggestedBlogs.status === 200) {
                 setLoading(false);
                 setSimilarBlogs(suggestedBlogs.data.blogs);
@@ -130,7 +129,7 @@ export const BlogProvider = ({ children }) => {
     }
 
     return (
-        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, fetchBlog, setBlogs, blogs, trendingBlogs, countData, loading, blog, setBlog, similarBlogs, isLikedByUser, setIsLikedByUser,commentsWrapper, setCommentsWrapper, totalCommentsLoaded, setTotalCommentsLoaded }}>
+        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, fetchBlog, setBlogs, blogs, trendingBlogs, countData, loading, blog, setBlog, similarBlogs, isLikedByUser, setIsLikedByUser,commentsWrapper, setCommentsWrapper, totalParentCommentsLoaded, setTotalParentCommentsLoaded }}>
             {children}
         </blogContext.Provider>
     );

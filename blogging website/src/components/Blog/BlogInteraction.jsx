@@ -36,7 +36,7 @@ const BlogInteraction = () => {
       }
 
       try {
-        const response = await axios.post('http://localhost:3000/api/create/like-blog', { _id }, {
+        const response = await axios.post('http://localhost:3000/api/interaction/like-blog', { _id }, {
           withCredentials: true
         });
         toast.success(response.data.message);
