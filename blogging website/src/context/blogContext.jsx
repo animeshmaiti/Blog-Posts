@@ -106,10 +106,12 @@ export const BlogProvider = ({ children }) => {
 
     const fetchBlog = async (blog_id) => {
         try {
-            const response = await axios.post('http://localhost:3000/api/blog/get-blog', { blog_id },{
+            const response = await axios.post('http://localhost:3000/api/blog/get-blog', { blog_id }, {
                 withCredentials: true
             });
             const blogData = response.data.blog;
+            blogData.comments = await fetchComments({ blog_id: blogData._id, setParentCommentCount: setTotalParentCommentsLoaded });
+            // console.log(blogData);
             const suggestedBlogs = await axios.post('http://localhost:3000/api/blog/search-blogs', { tag: blogData.tags[0], limit: 5, exclude_blog: blog_id });
             if (response.status === 200 && suggestedBlogs.status === 200) {
                 setLoading(false);
@@ -128,8 +130,25 @@ export const BlogProvider = ({ children }) => {
         }
     }
 
+    const fetchComments = async ({ skip = 0, blog_id, setParentCommentCount }) => {
+        try {
+            const response = await axios.post('http://localhost:3000/api/interaction/get-blog-comment', {
+                blog_id,
+                skip
+            });
+            const commentsData = response.data;
+            commentsData.map((comment) => {
+                comment.childrenLevel = 0;
+            })
+            setParentCommentCount(prev => prev + commentsData.length);
+            return commentsData;
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
-        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, fetchBlog, setBlogs, blogs, trendingBlogs, countData, loading, blog, setBlog, similarBlogs, isLikedByUser, setIsLikedByUser,commentsWrapper, setCommentsWrapper, totalParentCommentsLoaded, setTotalParentCommentsLoaded }}>
+        <blogContext.Provider value={{ fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, fetchBlog, setBlogs, blogs, trendingBlogs, countData, loading, blog, setBlog, similarBlogs, isLikedByUser, setIsLikedByUser, commentsWrapper, setCommentsWrapper, totalParentCommentsLoaded, setTotalParentCommentsLoaded, fetchComments }}>
             {children}
         </blogContext.Provider>
     );
