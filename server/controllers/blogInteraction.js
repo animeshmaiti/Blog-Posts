@@ -69,3 +69,17 @@ export const addComment = async (req, res) => {
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
+
+export const getBlogComments = async (req, res) => {
+    const { blog_id, skip } = req.body;
+    const limit = 5;
+    try {
+        const commentData = await Comment.find({ blog_id, isReply: false }).populate({ path: 'commented_by', select: 'personal_info.username personal_info.fullname personal_info.profile_img' }).sort({ commentedAt: -1 }).skip(skip).limit(limit);
+
+        return res.status(200).json(commentData);
+
+    } catch (error) {
+        console.error('Error fetching comments', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
