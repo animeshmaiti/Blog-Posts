@@ -10,6 +10,7 @@ const CommentField = ({ action }) => {
     authUser: { username, fullname, profile_img },
   } = useContext(authContext)
   const {
+    blog,
     blog: {
       _id,
       author: { _id: blog_author },
@@ -54,7 +55,7 @@ const CommentField = ({ action }) => {
       let ParentCommentIncrementVal = 1
       setBlog({
         ...blog,
-        comments: { ...comments, newCommentArr },
+        comments: [...comments, ...newCommentArr],
         activity: {
           ...activity,
           total_comments: total_comments + 1,
@@ -63,7 +64,9 @@ const CommentField = ({ action }) => {
         },
       })
       setTotalParentCommentsLoaded((prev) => prev + ParentCommentIncrementVal)
+      toast.success('Comment added successfully');
     } catch (error) {
+      toast.error('Failed to add comment');
       console.log(error)
     }
   }

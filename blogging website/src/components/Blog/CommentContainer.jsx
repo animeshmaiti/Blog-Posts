@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { useBlog } from '../../context/blogContext';
 import CommentField from './CommentField';
 import { AnimationWrapper } from '../../common/page-animation';
@@ -23,11 +22,11 @@ const CommentContainer = () => {
             <CommentField action={'comment'} />
             {
                 commentsArr && commentsArr.length ?
-                commentsArr.map((comment,i)=>{
-                    return<AnimationWrapper key={i}>
-                        <CommentCard index={i} leftVal={comment.childrenLevel*4} commentData={comment}/>
-                    </AnimationWrapper>
-                }):""
+                    commentsArr.map((comment, i) => {
+                        return <AnimationWrapper key={i}>
+                            <CommentCard index={i} leftVal={comment.childrenLevel * 4} commentData={comment} />
+                        </AnimationWrapper>
+                    }) : ""
             }
         </div>
     )
