@@ -2,6 +2,7 @@ import { createContext, useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import axios from 'axios';
 import { authWithGoogle } from '../common/firebase';
+import { useNavigate } from 'react-router-dom';
 
 export const authContext = createContext();
 
@@ -11,6 +12,7 @@ export const AuthProvider = ({ children }) => {
   );
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(true);
+  const navigate=useNavigate();
 
   // ==================Login=============================
   const Login = async (inputData) => {
@@ -100,6 +102,7 @@ export const AuthProvider = ({ children }) => {
       setIsValid(false);
       setAuthUser(null);
     } finally {
+      navigate('/');
       // setLoading(false);
       console.log('GoogleAuth function executed');
     }
@@ -117,6 +120,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('user');
       setAuthUser(null);
       setIsValid(false); // set user invalid
+      
       toast.success('Logout successful');
     } catch (err) {
       if (err.response) {
@@ -128,6 +132,7 @@ export const AuthProvider = ({ children }) => {
       }
     } finally {
       // setLoading(false);
+      navigate('/');
       console.log('Logout function executed');
     }
   };
@@ -154,6 +159,7 @@ export const AuthProvider = ({ children }) => {
       setIsValid(false);
     }finally{
       setLoading(false);
+
       console.log('validateUser function executed');
     }
   };

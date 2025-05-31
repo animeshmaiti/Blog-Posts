@@ -33,7 +33,7 @@ export const likeBlog = async (req, res) => {
 
 export const addComment = async (req, res) => {
     const user_id = req.user._id;
-    const { _id, comment, blog_author } = req.body;
+    const { _id, comment, blog_author, replying_to } = req.body;
     if (!comment.length) {
         return res.status(403).json({ error: "You must provide a comment" });
     }
@@ -43,17 +43,25 @@ export const addComment = async (req, res) => {
         comment,
         commented_by: user_id,
     };
+    if (replying_to) {
+        commentObj.parent = replying_to;
+    }
     try {
         const commentData = await new Comment(commentObj).save();
         const { comment, commentedAt, children } = commentData;
-        await Blog.findByIdAndUpdate({ _id }, { $push: { 'comments': commentData._id }, $inc: { 'activity.total_comments': 1, 'activity.total_parent_comments': 1 } });
+        await Blog.findByIdAndUpdate({ _id }, { $push: { 'comments': commentData._id }, $inc: { 'activity.total_comments': 1, 'activity.total_parent_comments': replying_to ? 0 : 1 } });
 
         const notificationObj = {
-            type: "comment",
+            type: replying_to ? "reply" : "comment",
             blog: _id,
             notification_for: blog_author,
             user: user_id,
             comment: commentData._id,
+        }
+        if (replying_to) {
+            notificationObj.replied_on_comment = replying_to;
+            const replyingToCommentDoc = await Comment.findOneAndUpdate({ _id: replying_to }, { $push: { children: commentData._id } });
+            notificationObj.notification_for = replyingToCommentDoc.commented_by;
         }
         await new Notification(notificationObj).save();
         return res.status(200).json({

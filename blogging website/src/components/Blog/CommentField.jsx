@@ -4,11 +4,13 @@ import toast, { Toaster } from 'react-hot-toast'
 import axios from 'axios'
 import { useBlog } from '../../context/blogContext'
 
-const CommentField = ({ action }) => {
+const CommentField = ({ action, index = undefined, replyingTo = undefined, setReplying }) => {
   const {
     isValid,
-    authUser: { username, fullname, profile_img },
-  } = useContext(authContext)
+    authUser
+  } = useContext(authContext);
+  const { username, fullname, profile_img } = authUser || {};
+
   const {
     blog,
     blog: {
@@ -21,8 +23,9 @@ const CommentField = ({ action }) => {
     },
     setBlog,
     setTotalParentCommentsLoaded,
-  } = useBlog()
-  const [comment, setComment] = useState('')
+  } = useBlog();
+  const [comment, setComment] = useState('');
+
   const handleComment = async () => {
     if (!isValid) {
       toast.error('Please login to leave a comment')
@@ -40,19 +43,31 @@ const CommentField = ({ action }) => {
           _id,
           blog_author,
           comment,
+          replying_to: replyingTo,
         },
         {
           withCredentials: true,
         }
       )
+      let data = response.data;
       // console.log(response.data)
-      response.data.commented_by = {
+      data.commented_by = {
         personal_info: { username, profile_img, fullname },
       }
-      let newCommentArr = []
-      response.data.childrenLevel = 0
-      newCommentArr.push(response.data)
-      let ParentCommentIncrementVal = 1
+      let newCommentArr = [];
+      if (replyingTo) {
+        commentsArr[index].children.push(data._id);
+        data.childrenLevel = commentsArr[index].childrenLevel + 1;
+        data.parentIndex = index;
+        commentsArr[index].isReplyLoaded = true;
+        commentsArr.splice(index + 1, 0, data);
+        newCommentArr=commentsArr;
+        setReplying(false);
+      } else {
+        response.data.childrenLevel = 0;
+        newCommentArr.push(data);
+      }
+      let ParentCommentIncrementVal = replyingTo ? 0 : 1;
       setBlog({
         ...blog,
         comments: [...comments, ...newCommentArr],
@@ -63,11 +78,11 @@ const CommentField = ({ action }) => {
             total_parent_comments + ParentCommentIncrementVal,
         },
       })
-      setTotalParentCommentsLoaded((prev) => prev + ParentCommentIncrementVal)
+      setTotalParentCommentsLoaded((prev) => prev + ParentCommentIncrementVal);
       toast.success('Comment added successfully');
     } catch (error) {
       toast.error('Failed to add comment');
-      console.log(error)
+      console.log(error);
     }
   }
   return (
