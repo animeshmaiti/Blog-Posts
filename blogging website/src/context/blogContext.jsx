@@ -130,18 +130,26 @@ export const BlogProvider = ({ children }) => {
         }
     }
 
-    const fetchComments = async ({ skip = 0, blog_id, setParentCommentCount }) => {
+    const fetchComments = async ({ skip = 0, blog_id, setParentCommentCount, comment_array = null }) => {
         try {
+            let res;
             const response = await axios.post('http://localhost:3000/api/interaction/get-blog-comment', {
                 blog_id,
                 skip
             });
             const commentsData = response.data;
+            console.log(commentsData,skip);
             commentsData.map((comment) => {
                 comment.childrenLevel = 0;
             })
             setParentCommentCount(prev => prev + commentsData.length);
-            return commentsData;
+            if (comment_array == null) {
+                res = commentsData;
+            }
+            else {
+                res = [...comment_array, ...commentsData];
+            }
+            return res;
         } catch (error) {
             console.log(error);
         }

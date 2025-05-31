@@ -46,7 +46,7 @@ export const addComment = async (req, res) => {
     try {
         const commentData = await new Comment(commentObj).save();
         const { comment, commentedAt, children } = commentData;
-        await Blog.findByIdAndUpdate({ _id }, { $push: { 'comments': commentData._id }, $inc: { 'activity.total_comments': 1 }, 'activity.total_parent_comments': 1 });
+        await Blog.findByIdAndUpdate({ _id }, { $push: { 'comments': commentData._id }, $inc: { 'activity.total_comments': 1, 'activity.total_parent_comments': 1 } });
 
         const notificationObj = {
             type: "comment",
