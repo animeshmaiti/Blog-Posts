@@ -3,18 +3,78 @@ import { getDay } from "../../common/date";
 import { authContext } from "../../context/authContext";
 import toast from "react-hot-toast";
 import CommentField from "./CommentField";
+import { useBlog } from "../../context/blogContext";
+import axios from "axios";
 
 const CommentCard = ({ index, leftVal, commentData }) => {
     const {
         commented_by: {
             personal_info: { profile_img, fullname, username },
         },
-        commentedAt, comment,_id
+        commentedAt, comment, _id, children
     } = commentData;
-    const {isValid}=useContext(authContext);
-    const [isReplying,setReplying]=useState(false);
-    const handleReplyClick =()=>{ 
-        if(!isValid){
+    const {blog,
+        blog: {
+            comments,
+            activity,
+            activity: { total_parent_comments },
+            comments: commentsArr,
+            author: {
+                personal_info: { username: blog_author },
+            },
+        },
+        setBlog,
+        setTotalParentCommentsLoaded,
+    } = useBlog();
+    const { isValid } = useContext(authContext);
+    const [isReplying, setReplying] = useState(false);
+    const removeCommentCards = (startIndex) => {
+        if (commentsArr[startIndex]) {
+            while (commentsArr[startIndex].childrenLevel > commentData.childrenLevel) {
+                commentsArr.splice(startIndex, 1);
+                if (!commentsArr[startIndex]) {
+                    break;
+                }
+            }
+        }
+        setBlog((prev) => {
+            return {
+                ...prev,
+                comments: commentsArr
+            }
+        });
+    }
+    const loadReplies = async ({ skip = 0 }) => {
+        if (children.length) {
+            hideReplies();
+            try {
+                const response = await axios.post('http://localhost:3000/api/interaction/get-replies', { _id, skip });
+                const { data: { replies } } = response;
+                commentData.isReplyLoaded = true;
+                for (let i = 0; i < replies.length; i++) {
+                    replies[i].childrenLevel = commentData.childrenLevel + 1;
+                    commentsArr.splice(index + 1 + i + skip, 0, replies[i]);
+                }
+                setBlog((prev) => {
+                    return {
+                        ...prev,
+                        comments: commentsArr
+                    }
+                });
+                console.log(blog);
+            } catch (error) {
+                console.error("Error loading replies:", error);
+                toast.error('Failed to load replies');
+            }
+
+        }
+    }
+    const hideReplies = () => {
+        commentData.isReplyLoaded = false;
+        removeCommentCards(index + 1);
+    }
+    const handleReplyClick = () => {
+        if (!isValid) {
             toast.error('Please login to reply to comments');
             return;
         }
@@ -31,12 +91,23 @@ const CommentCard = ({ index, leftVal, commentData }) => {
                 </div>
                 <p className="font-gelasio text-xl ml-3">{comment}</p>
                 <div className="flex gap-5 items-center mt-5">
+                    {
+                        commentData.isReplyLoaded ? (
+                            <button className="text-dark-grey p-2 px-3 hover:bg-grey/30 rounded-md flex items-center gap-2" onClick={hideReplies}>
+                                <i className="fi fi-rs-comment-dots"> Hide Reply</i>
+                            </button>
+                        ) : (
+                            <button className="text-dark-grey p-2 px-3 hover:bg-grey/30 rounded-md flex items-center gap-2" onClick={loadReplies}>
+                                <i className="fi fi-rs-comment-dots">{children.length} Reply</i>
+                            </button>
+                        )
+                    }
                     <button className="underline" onClick={handleReplyClick}>Reply</button>
                 </div>
                 {
                     isReplying && (
                         <div className="mt-8">
-                            <CommentField action="reply" index={index} replyingTo={_id} setReplying={setReplying}/>
+                            <CommentField action="reply" index={index} replyingTo={_id} setReplying={setReplying} />
                         </div>
                     )
                 }

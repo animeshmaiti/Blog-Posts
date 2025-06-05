@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.post('http://localhost:3000/api/auth/login', inputData, {
         withCredentials: true
       });
-      console.log(response.data);
+      // console.log(response.data);
       const data = response.data;
       toast.success('Login successful');
       localStorage.setItem('user', JSON.stringify(data));

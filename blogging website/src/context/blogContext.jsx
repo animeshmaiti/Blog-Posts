@@ -138,7 +138,7 @@ export const BlogProvider = ({ children }) => {
                 skip
             });
             const commentsData = response.data;
-            console.log(commentsData,skip);
+            // console.log(commentsData,skip);
             commentsData.map((comment) => {
                 comment.childrenLevel = 0;
             })

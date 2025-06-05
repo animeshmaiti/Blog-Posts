@@ -50,27 +50,26 @@ const CommentField = ({ action, index = undefined, replyingTo = undefined, setRe
         }
       )
       let data = response.data;
-      // console.log(response.data)
       data.commented_by = {
         personal_info: { username, profile_img, fullname },
       }
-      let newCommentArr = [];
+      let newCommentArr;
       if (replyingTo) {
         commentsArr[index].children.push(data._id);
         data.childrenLevel = commentsArr[index].childrenLevel + 1;
         data.parentIndex = index;
         commentsArr[index].isReplyLoaded = true;
         commentsArr.splice(index + 1, 0, data);
-        newCommentArr=commentsArr;
+        newCommentArr = commentsArr;
         setReplying(false);
       } else {
-        response.data.childrenLevel = 0;
-        newCommentArr.push(data);
+        data.childrenLevel = 0;
+        newCommentArr = [data, ...commentsArr];
       }
       let ParentCommentIncrementVal = replyingTo ? 0 : 1;
       setBlog({
         ...blog,
-        comments: [...comments, ...newCommentArr],
+        comments: newCommentArr,
         activity: {
           ...activity,
           total_comments: total_comments + 1,
