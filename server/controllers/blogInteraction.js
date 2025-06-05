@@ -1,3 +1,4 @@
+import { populate } from 'dotenv';
 import Blog from '../Schema/Blog.js';
 import Comment from '../Schema/Comment.js';
 import Notification from '../Schema/Notification.js';
@@ -45,6 +46,7 @@ export const addComment = async (req, res) => {
     };
     if (replying_to) {
         commentObj.parent = replying_to;
+        commentObj.isReply = true;
     }
     try {
         const commentData = await new Comment(commentObj).save();
@@ -88,6 +90,31 @@ export const getBlogComments = async (req, res) => {
 
     } catch (error) {
         console.error('Error fetching comments', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+export const getReplies=async(req,res)=>{
+    const {_id,skip}= req.body;
+    const limit = 5;
+    try {
+        const replies = await Comment.findOne({_id})
+        .populate({
+            path:'children',
+            option:{
+                limit:limit,
+                skip:skip,
+                sort:{'commentedAt':-1}
+            },
+            populate:{
+                path:'commented_by',
+                select:'personal_info.username personal_info.fullname personal_info.profile_img'
+            },
+            select:'-blog_id -updatedAt'
+        })
+        .select('children');
+        return res.status(200).json({replies:replies.children});
+    } catch (error) {
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
