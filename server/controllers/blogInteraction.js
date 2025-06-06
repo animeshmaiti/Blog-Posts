@@ -94,27 +94,64 @@ export const getBlogComments = async (req, res) => {
     }
 }
 
-export const getReplies=async(req,res)=>{
-    const {_id,skip}= req.body;
+export const getReplies = async (req, res) => {
+    const { _id, skip } = req.body;
     const limit = 5;
     try {
-        const replies = await Comment.findOne({_id})
-        .populate({
-            path:'children',
-            option:{
-                limit:limit,
-                skip:skip,
-                sort:{'commentedAt':-1}
-            },
-            populate:{
-                path:'commented_by',
-                select:'personal_info.username personal_info.fullname personal_info.profile_img'
-            },
-            select:'-blog_id -updatedAt'
-        })
-        .select('children');
-        return res.status(200).json({replies:replies.children});
+        const replies = await Comment.findOne({ _id })
+            .populate({
+                path: 'children',
+                option: {
+                    limit: limit,
+                    skip: skip,
+                    sort: { 'commentedAt': -1 }
+                },
+                populate: {
+                    path: 'commented_by',
+                    select: 'personal_info.username personal_info.fullname personal_info.profile_img'
+                },
+                select: '-blog_id -updatedAt'
+            })
+            .select('children');
+        return res.status(200).json({ replies: replies.children });
     } catch (error) {
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
+const deleteComments = async (_id) => {
+    const comment = await Comment.findOneAndDelete({ _id });
+    if (comment.parent) {
+        await Comment.findByIdAndUpdate(comment.parent, { $pull: { children: _id } });
+    }
+    await Notification.findOneAndDelete({ comment: _id });
+    await Notification.findOneAndUpdate({ reply: _id }, { $unset: { reply: 1 } });
+    await Blog.findByIdAndUpdate(comment.blog_id, { $pull: { comments: _id }, $inc: { 'activity.total_comments': -1, 'activity.total_parent_comments': comment.isReply ? 0 : -1 } });
+    if (comment.children.length) {
+        comment.children.map(async (childId) => {
+            await deleteComments(childId);
+        });
+    }
+}
+
+export const deleteComment = async (req, res) => {
+    const user_id = req.user._id;
+    const { _id } = req.body;
+
+    try {
+        const comment = await Comment.findById(_id);
+        if (!comment) {
+            return res.status(404).json({ error: "Comment not found" });
+        }
+
+        if (comment.commented_by.toString() !== user_id.toString() || comment.blog_author.toString() !== user_id.toString()) {
+            return res.status(403).json({ error: "You are not authorized to delete this comment" });
+        }
+        await deleteComments(_id);
+        return res.status(200).json({ message: "Comment deleted successfully" });
+
+    } catch (error) {
+        console.error('Error deleting comment', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
 }
