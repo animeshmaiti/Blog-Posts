@@ -7,6 +7,7 @@ import SearchPage from './pages/SearchPage';
 import PageNotFound from './pages/PageNotFound';
 import ProfilePage from './pages/ProfilePage';
 import BlogPage from './pages/BlogPage';
+import SideNavbar from './components/SideNavbar';
 
 const App = () => {
     return (
@@ -15,6 +16,10 @@ const App = () => {
             <Route path='/editor/:blog_id' element={<Editor/>}/>
             <Route path='/' element={<Navbar />}>
                 <Route index element={<HomePage/>} />
+                <Route path='settings' element={<SideNavbar/>}>
+                    <Route path='edit-profile' element={<h1>Edit Profile</h1>}/>
+                    <Route path='change-password' element={<h1>Change Password</h1>}/>
+                </Route>
                 <Route path='signin' element={<UserAuthForm type='sign-in'/>} />
                 <Route path='signup' element={<UserAuthForm type='sign-up'/>} />
                 <Route path='search/:query' element={<SearchPage/>} />
