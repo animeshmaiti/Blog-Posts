@@ -25,13 +25,13 @@ const CommentCard = ({ index, leftVal, commentData }) => {
         },
         setBlog,
         setTotalParentCommentsLoaded,
+        commentsWrapper
     } = useBlog();
     const { isValid, authUser: { username } } = useContext(authContext);
     const [isReplying, setReplying] = useState(false);
 
     const getParentIndex = () => {
         let startingIndex = index - 1;
-        console.log(startingIndex);
         while (startingIndex >= 0 && commentsArr[startingIndex].childrenLevel >= commentData.childrenLevel) {
             startingIndex--;
         }
@@ -75,16 +75,17 @@ const CommentCard = ({ index, leftVal, commentData }) => {
             }
         });
     }
-    const loadReplies = async ({ skip = 0 }) => {
-        if (children.length) {
+
+    const loadReplies = async ({ skip = 0, currentIndex = index }) => {
+        if (commentsArr[currentIndex].children.length) {
             hideReplies();
             try {
-                const response = await axios.post('http://localhost:3000/api/interaction/get-replies', { _id, skip });
+                const response = await axios.post('http://localhost:3000/api/interaction/get-replies', { _id: commentsArr[currentIndex]._id, skip });
                 const { data: { replies } } = response;
-                commentData.isReplyLoaded = true;
+                commentsArr[currentIndex].isReplyLoaded = true;
                 for (let i = 0; i < replies.length; i++) {
-                    replies[i].childrenLevel = commentData.childrenLevel + 1;
-                    commentsArr.splice(index + 1 + i + skip, 0, replies[i]);
+                    replies[i].childrenLevel = commentsArr[currentIndex].childrenLevel + 1;
+                    commentsArr.splice(currentIndex + 1 + i + skip, 0, replies[i]);
                 }
                 setBlog((prev) => {
                     return {
@@ -100,10 +101,12 @@ const CommentCard = ({ index, leftVal, commentData }) => {
 
         }
     }
+
     const hideReplies = () => {
         commentData.isReplyLoaded = false;
         removeCommentCards(index + 1);
     }
+
     const handleReplyClick = () => {
         if (!isValid) {
             toast.error('Please login to reply to comments');
@@ -111,6 +114,7 @@ const CommentCard = ({ index, leftVal, commentData }) => {
         }
         setReplying((prev) => !prev);
     }
+
     const deleteComment = async (e) => {
         e.target.setAttribute("disabled", true);
         try {
@@ -124,6 +128,27 @@ const CommentCard = ({ index, leftVal, commentData }) => {
             console.error("Error deleting comment:", error);
             toast.error('Failed to delete comment');
             return;
+        }
+    }
+    const LoadMoreRepliesButton = () => {
+        let parentIndex = getParentIndex();
+        console.log(parentIndex);
+        let button = <button className="text-dark-grey p-2 px-3 hover:bg-grey/30 rounded-md flex items-center gap-2" onClick={() => loadReplies({ skip: index - parentIndex, currentIndex: parentIndex })}>
+            Load More Replies
+        </button>;
+        if (commentsArr[index + 1]) {
+            if (commentsArr[index + 1].childrenLevel < commentsArr[index].childrenLevel) {
+                if ((index - parentIndex) < commentsArr[parentIndex].children.length) {
+                    return button;
+                }
+            }
+        }
+        else {
+            if (parentIndex !== -1) {
+                if ((index - parentIndex) < commentsArr[parentIndex].children.length) {
+                    return button;
+                }
+            }
         }
     }
     return (
@@ -164,6 +189,7 @@ const CommentCard = ({ index, leftVal, commentData }) => {
                     )
                 }
             </div>
+            <LoadMoreRepliesButton />
         </div>
     )
 }
