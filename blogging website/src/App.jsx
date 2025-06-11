@@ -8,6 +8,7 @@ import PageNotFound from './pages/PageNotFound';
 import ProfilePage from './pages/ProfilePage';
 import BlogPage from './pages/BlogPage';
 import SideNavbar from './components/SideNavbar';
+import ChangePassword from './pages/ChangePassword';
 
 const App = () => {
     return (
@@ -18,7 +19,7 @@ const App = () => {
                 <Route index element={<HomePage/>} />
                 <Route path='settings' element={<SideNavbar/>}>
                     <Route path='edit-profile' element={<h1>Edit Profile</h1>}/>
-                    <Route path='change-password' element={<h1>Change Password</h1>}/>
+                    <Route path='change-password' element={<ChangePassword/>}/>
                 </Route>
                 <Route path='signin' element={<UserAuthForm type='sign-in'/>} />
                 <Route path='signup' element={<UserAuthForm type='sign-up'/>} />
