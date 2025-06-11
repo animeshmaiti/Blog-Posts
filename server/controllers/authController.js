@@ -163,6 +163,37 @@ export const GoogleAuth = async (req, res) => {
     }
 }
 
+export const changePassword = async (req, res) => { 
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+        return res.status(400).json({ error: 'Please fill all the fields' });
+    }
+    if (!passwordRegex.test(newPassword)) {
+        return res.status(400).json({ error: 'New password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one number' });
+    }
+    try {
+        const user = await User.findById(req.user._id);
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+        if(user.google_auth) {
+            return res.status(403).json({ error: 'You cannot change the password for a Google authenticated user. Please log in with Google.' });
+        }
+        const isMatch = await bcrypt.compare(oldPassword, user.personal_info.password);
+        if (!isMatch) {
+            return res.status(400).json({ error: 'Old password is incorrect' });
+        }
+        const salt = await bcrypt.genSalt(10);
+        user.personal_info.password = await bcrypt.hash(newPassword, salt);
+        await user.save();
+        console.log('Password changed successfully');
+        return res.status(200).json({ message: 'Password changed successfully' });
+    } catch (err) {
+        console.log('Error in changing password', err);
+        res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 
 export const logout = (req, res) => {
     try {
