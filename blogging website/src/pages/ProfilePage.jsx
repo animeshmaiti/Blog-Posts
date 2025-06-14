@@ -57,7 +57,6 @@ const ProfilePage = () => {
         countRoute: '/api/blog/search-blogs-count',
         data_to_send: { author: user_id }
       });
-      console.log(formattedData);
       if (response.status === 200) {
         // formattedData.user_id = user_id;
         setCountData(formattedData);

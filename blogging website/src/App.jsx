@@ -9,6 +9,7 @@ import ProfilePage from './pages/ProfilePage';
 import BlogPage from './pages/BlogPage';
 import SideNavbar from './components/SideNavbar';
 import ChangePassword from './pages/ChangePassword';
+import EditProfile from './pages/EditProfile';
 
 const App = () => {
     return (
@@ -18,7 +19,7 @@ const App = () => {
             <Route path='/' element={<Navbar />}>
                 <Route index element={<HomePage/>} />
                 <Route path='settings' element={<SideNavbar/>}>
-                    <Route path='edit-profile' element={<h1>Edit Profile</h1>}/>
+                    <Route path='edit-profile' element={<EditProfile/>}/>
                     <Route path='change-password' element={<ChangePassword/>}/>
                 </Route>
                 <Route path='signin' element={<UserAuthForm type='sign-in'/>} />
