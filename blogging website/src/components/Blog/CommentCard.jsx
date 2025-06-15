@@ -27,7 +27,8 @@ const CommentCard = ({ index, leftVal, commentData }) => {
         setTotalParentCommentsLoaded,
         commentsWrapper
     } = useBlog();
-    const { isValid, authUser: { username } } = useContext(authContext);
+    const { isValid, authUser } = useContext(authContext);
+    const username = authUser?.username;
     const [isReplying, setReplying] = useState(false);
 
     const getParentIndex = () => {
