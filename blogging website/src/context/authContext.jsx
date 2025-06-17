@@ -12,7 +12,7 @@ export const AuthProvider = ({ children }) => {
   );
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(true);
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   // ==================Login=============================
   const Login = async (inputData) => {
@@ -120,7 +120,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.removeItem('user');
       setAuthUser(null);
       setIsValid(false); // set user invalid
-      
+
       toast.success('Logout successful');
     } catch (err) {
       if (err.response) {
@@ -157,7 +157,7 @@ export const AuthProvider = ({ children }) => {
       }
       setAuthUser(null);
       setIsValid(false);
-    }finally{
+    } finally {
       setLoading(false);
 
       console.log('validateUser function executed');
@@ -169,7 +169,7 @@ export const AuthProvider = ({ children }) => {
   }, []);
 
   return (
-    <authContext.Provider value={{ Login, SignUp, LogOut, GoogleAuth, validateUser, authUser, isValid, loading,setLoading }}>
+    <authContext.Provider value={{ Login, SignUp, LogOut, GoogleAuth, validateUser, authUser, setAuthUser, isValid, loading, setLoading }}>
       {children}
     </authContext.Provider>
   );

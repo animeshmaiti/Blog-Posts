@@ -25,3 +25,14 @@ export const getProfile = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 }
+
+export const updateProfileImg = async (req, res) => {
+    const { url } = req.body;
+    if (!url) return res.status(400).json({ error: "Image URL is required" });
+    try {
+        await User.findOneAndUpdate({ _id: req.user._id }, { 'personal_info.profile_img': url });
+        return res.status(200).json({ profile_img: url });
+    } catch (error) {
+        return res.status(500).json({ error: error.message });
+    }
+}
