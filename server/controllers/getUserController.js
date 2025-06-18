@@ -36,3 +36,42 @@ export const updateProfileImg = async (req, res) => {
         return res.status(500).json({ error: error.message });
     }
 }
+
+export const updateProfile = async (req, res) => {
+    const bioLimit = 150;
+    const { username, bio, social_links } = req.body;
+    if (username.length < 3 || username.length > 20) {
+        return res.status(400).json({ error: 'Username must be between 3 and 20 characters' });
+    }
+    if (bio.length > bioLimit) {
+        return res.status(400).json({ error: `Bio must be less than ${bioLimit} characters` });
+    }
+    const socialLinksArr = Object.keys(social_links);
+    try {
+        for (let i = 0; i < socialLinksArr.length; i++) {
+            if (social_links[socialLinksArr[i]].length) {
+                const hostname = new URL(social_links[socialLinksArr[i]]).hostname;
+                if (!hostname.includes(`${socialLinksArr[i]}.com`) && socialLinksArr[i] !== 'website') {
+                    return res.status(400).json({ error: `Invalid URL for ${socialLinksArr[i]}` });
+                }
+            }
+        }
+        const updateObj = {
+            'personal_info.username': username,
+            'personal_info.bio': bio,
+            social_links: social_links
+        }
+        await User.findOneAndUpdate(
+            { _id: req.user._id },
+            updateObj,
+            { runValidators: true }
+        );
+        return res.status(200).json({ username });
+    } catch (error) {
+        if (error.code === 11000) {
+            return res.status(400).json({ error: 'Username already exists' });
+        } else {
+            return res.status(500).json({ error: error.message });
+        }
+    }
+}

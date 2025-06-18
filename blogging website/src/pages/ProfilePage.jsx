@@ -10,7 +10,7 @@ import { InPageNavigation } from '../components/InPageNavigation';
 import NoDataMessage from '../components/BlogPost/NoDataMessage';
 import LoadMoreDataBtn from '../components/BlogPost/LoadMoreDataBtn';
 import BlogPostCard from '../components/BlogPost/BlogPostCard';
-import PageNotFound from './PageNotFound';
+import PageNotFound from './PageNotFound'; 
 
 const ProfilePage = () => {
   const { username } = useContext(authContext)?.authUser || {};
@@ -26,7 +26,7 @@ const ProfilePage = () => {
       youtube: "",
       instagram: "",
       facebook: "",
-      twitter: "",
+      x: "",
       github: "",
       website: ""
     },
@@ -74,6 +74,7 @@ const ProfilePage = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.post('http://localhost:3000/api/user/get-profile', { username: profileID });
+      console.log(response.data);
       const profileData = response.data;
       if (!profileData || !profileData._id) {
         setProfileLoaded(false);

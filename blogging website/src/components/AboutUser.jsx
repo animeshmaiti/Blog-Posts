@@ -17,7 +17,7 @@ const AboutUser = ({ className, bio, social_links, joinedAt }) => {
             if (link.length) {
               return (
                 <Link to={link} key={key} target='_blank'>
-                  <i className={'fi '+(key!=='website'?'fi-brands-'+key:'fi-rr-globe')+' text-2xl hover:text-black'}></i>
+                  <i className={'fi '+(key === 'website' ? 'fi-rr-globe' : key === 'x' ? 'fi-brands-twitter' : `fi-brands-${key}`)+' text-2xl hover:text-black'}></i>
                 </Link>
               )
             }

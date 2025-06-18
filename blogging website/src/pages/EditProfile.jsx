@@ -11,6 +11,7 @@ const EditProfile = () => {
   const { authUser, setAuthUser, isValid } = useContext(authContext);
   let bioLimit = 200;
   const profileImgEle = useRef();
+  const editProfileForm = useRef();
   const profileDataStructure = {
     personal_info: {
       fullname: '',
@@ -23,7 +24,7 @@ const EditProfile = () => {
       youtube: '',
       instagram: '',
       facebook: '',
-      twitter: '',
+      x: '',
       github: '',
       website: '',
     },
@@ -105,6 +106,55 @@ const EditProfile = () => {
     }
   };
 
+  const handleUpdate = async (e) => {
+    e.preventDefault();
+    const form = new FormData(editProfileForm.current);
+    const formData = {};
+    form.forEach((value, key) => {
+      formData[key] = value;
+    });
+    const { username, bio, youtube, facebook, x, github, instagram, website } = formData;
+    if (username.length < 3 || username.length > 20) {
+      toast.error('Username must be between 3 and 20 characters');
+      return;
+    }
+    if (bio.length > bioLimit) {
+      toast.error(`Bio must be less than ${bioLimit} characters`);
+      return;
+    }
+    const loadingToast = toast.loading('Updating profile...');
+    e.target.setAttribute('disabled', true);
+    try {
+      const response = await axios.post('http://localhost:3000/api/user/update-profile', {
+        username, bio,
+        social_links: {
+          youtube,
+          facebook,
+          x,
+          github,
+          instagram,
+          website
+        }
+      }, {
+        withCredentials: true
+      });
+      const data = response.data;
+      if(authUser.username !== data.username){
+        const newUserAuth={...authUser,username:data.username};
+        sessionStorage.setItem('user', JSON.stringify(newUserAuth));
+        setAuthUser(newUserAuth);
+      }
+      toast.success('Profile updated successfully 👍!');
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error(error.response?.data?.error || 'Failed to update profile');
+    } finally {
+      e.target.removeAttribute('disabled');
+      toast.dismiss(loadingToast);
+    }
+
+  }
+
   useEffect(() => {
     if (isValid) {
       fetchUserProfile();
@@ -116,7 +166,7 @@ const EditProfile = () => {
       {loading ? (
         <Loader />
       ) : (
-        <form action=''>
+        <form ref={editProfileForm}>
           <Toaster />
           <h1 className='max-md:hidden'>Edit Profile</h1>
           <div className='flex flex-col lg:flex-row items-start py-10 gap-8 lg:gap-10'>
@@ -187,12 +237,12 @@ const EditProfile = () => {
                       type='text'
                       value={value}
                       placeholder={key.charAt(0).toUpperCase() + key.slice(1)}
-                      icon={key !== 'website' ? `fi-brands-${key}` : 'fi-rr-globe'}
+                      icon={key === 'website' ? 'fi-rr-globe' : key === 'x' ? 'fi-brands-twitter' : `fi-brands-${key}`}
                     />
                   ))
                 }
               </div>
-              <button className='btn-dark w-auto px-10' type='submit'>Update</button>
+              <button className='btn-dark w-auto px-10' type='submit' onClick={handleUpdate}>Update</button>
             </div>
           </div>
         </form>
