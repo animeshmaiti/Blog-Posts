@@ -3,7 +3,7 @@ import { Navigate, NavLink, Outlet } from 'react-router-dom'
 import { authContext } from '../context/authContext';
 
 const SideNavbar = () => {
-    const { isValid } = useContext(authContext);
+    const { isValid, authUser } = useContext(authContext);
     const page = location.pathname.split('/')[2];
     const [pageState, setPageState] = useState(page.replace('-', ' '));
     const [showSideNav, setShowSideNav] = useState(false);
@@ -50,7 +50,12 @@ const SideNavbar = () => {
                             Blogs
                         </NavLink>
                         <NavLink to='/dashboard/notification' onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>
-                            <i className='fi fi-rr-bell'></i>
+                            <div className='relative'>
+                                <i className='fi fi-rr-bell'></i>
+                                {
+                                    authUser?.new_notification_available && <span className='bg-red w-2 h-2 rounded-full absolute z-10 top-0 right-0'></span>
+                                }
+                            </div>
                             Notification
                         </NavLink>
                         <NavLink to='/editor' onClick={(e) => setPageState(e.target.innerText)} className='sidebar-link'>

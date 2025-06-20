@@ -9,6 +9,7 @@ import createBlogRoutes from './routes/createBlogRoute.js';
 import getBlogRoutes from './routes/getBlogRoutes.js';
 import getUserRoutes from './routes/getUserRoutes.js';
 import blogInteractionRoutes from './routes/blogInteractionRoutes.js';
+import notificationRoutes from './routes/notificationRoutes.js';
 
 configDotenv();
 const server = express();
@@ -17,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 server.use(express.json());
 server.use(cookieParser());
 server.use(cors({
-    origin:'http://localhost:5173',
+    origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
 }));
@@ -28,9 +29,10 @@ server.get('/', (req, res) => {
 
 server.use('/api/auth', authRoutes);
 server.use('/api/create', createBlogRoutes);
-server.use('/api/blog',getBlogRoutes);
-server.use('/api/user',getUserRoutes);
-server.use('/api/interaction',blogInteractionRoutes);
+server.use('/api/blog', getBlogRoutes);
+server.use('/api/user', getUserRoutes);
+server.use('/api/interaction', blogInteractionRoutes);
+server.use('/api/notification', notificationRoutes);
 
 server.listen(PORT, () => {
     mongoConnect();
