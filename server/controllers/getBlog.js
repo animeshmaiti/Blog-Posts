@@ -111,8 +111,8 @@ export const getBlogById = async (req, res) => {
             return res.status(500).json({ error: "Blog is in draft mode" });
 
         }
-        const isLikedByUser = user_id ? await blog.activity.likedBy.includes(user_id) : false;
-        return res.status(200).json({ blog, isLikedByUser });
+        // const isLikedByUser = user_id ? await blog.activity.likedBy.includes(user_id) : false;
+        return res.status(200).json({ blog });
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }

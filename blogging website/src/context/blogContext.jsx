@@ -117,7 +117,6 @@ export const BlogProvider = ({ children }) => {
                 setLoading(false);
                 setSimilarBlogs(suggestedBlogs.data.blogs);
                 setBlog(blogData);
-                setIsLikedByUser(Boolean(response.data.isLikedByUser));
             } else {
                 toast.error('Failed to fetch blog');
                 navigate('/404');

@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { useBlog } from '../../context/blogContext'
 import { Link } from 'react-router-dom';
 import { authContext } from '../../context/authContext';
@@ -6,9 +6,22 @@ import { Toaster, toast } from 'react-hot-toast';
 import axios from 'axios';
 
 const BlogInteraction = () => {
-  const { blog: { _id, blog_id, title, tags, activity, activity: { total_likes, total_comments }, author: { personal_info: { username: author_username } } }, setBlog, isLikedByUser, setIsLikedByUser,setCommentsWrapper } = useBlog();
+  const { blog: { _id, blog_id, title, tags, activity, activity: { total_likes, total_comments }, author: { personal_info: { username: author_username } } }, setBlog, isLikedByUser, setIsLikedByUser, setCommentsWrapper } = useBlog();
   const { authUser, isValid } = useContext(authContext) || {};
   const username = authUser?.username || '';
+
+  useEffect(()=>{
+    if(isValid){
+      axios.post('http://localhost:3000/api/interaction/is-liked-by-user',{_id},{
+        withCredentials:true
+      }).then(({data:{liked_by_user}})=>{
+        setIsLikedByUser(Boolean(liked_by_user));
+      }).catch((error)=>{
+        console.error('Error fetching like status:', error);
+        toast.error('Failed to fetch like status');
+      });
+    }
+  },[])
 
   const handleLike = async () => {
     if (!isValid) {
@@ -36,7 +49,7 @@ const BlogInteraction = () => {
       }
 
       try {
-        const response = await axios.post('http://localhost:3000/api/interaction/like-blog', { _id }, {
+        const response = await axios.post('http://localhost:3000/api/interaction/like-blog', { _id, isLikedByUser }, {
           withCredentials: true
         });
         toast.success(response.data.message);

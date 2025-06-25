@@ -5,26 +5,28 @@ import Notification from '../Schema/Notification.js';
 
 export const likeBlog = async (req, res) => {
     const user_id = req.user._id;
-    const { _id } = req.body;
+    const { _id, isLikedByUser } = req.body;
+    const incrementVal = !isLikedByUser ? 1 : -1;
 
     try {
-        const blog = await Blog.findById(_id);
+        const blog = await Blog.findOneAndUpdate({ _id }, { $inc: { 'activity.total_likes': incrementVal } });
         if (!blog) {
-            return res.status(404).json({ error: "Blog not found" });
+            return res.status(404).json({ error: 'Blog not found' });
         }
 
-        const alreadyLiked = blog.activity.likedBy.includes(user_id);
-        const update = {
-            $inc: { 'activity.total_likes': alreadyLiked ? -1 : 1 },
-            [alreadyLiked ? '$pull' : '$addToSet']: { 'activity.likedBy': user_id }
-        };
-
-        const updatedBlog = await Blog.findByIdAndUpdate(_id, update, { new: true });
-
-        res.status(200).json({
-            message: alreadyLiked ? "Like removed" : "Blog liked successfully",
-            blog: updatedBlog,
-        });
+        if (!isLikedByUser) {
+            const likeObj = new Notification({
+                type: 'like',
+                blog: _id,
+                notification_for: blog.author,
+                user: user_id
+            })
+            await likeObj.save();
+            return res.status(200).json({ message: 'Blog liked successfully' });
+        } else {
+            await Notification.findOneAndDelete({ user: user_id, blog: _id, type: 'like' });
+            return res.status(200).json({ message: 'Like Removed' });
+        }
 
     } catch (error) {
         console.error('Error liking blog', error);
@@ -32,11 +34,23 @@ export const likeBlog = async (req, res) => {
     }
 };
 
+export const isLikedByUser = async (req, res) => {
+    const user_id = req.user._id;
+    const { _id } = req.body;
+    try {
+        const response = await Notification.exists({ user: user_id, blog: _id, type: 'like' });
+        return res.status(200).json({ liked_by_user: response });
+    } catch (error) {
+        console.error('Error checking if blog is liked by user', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}
+
 export const addComment = async (req, res) => {
     const user_id = req.user._id;
     const { _id, comment, blog_author, replying_to } = req.body;
     if (!comment.length) {
-        return res.status(403).json({ error: "You must provide a comment" });
+        return res.status(403).json({ error: 'You must provide a comment' });
     }
     const commentObj = {
         blog_id: _id,
@@ -54,7 +68,7 @@ export const addComment = async (req, res) => {
         await Blog.findByIdAndUpdate({ _id }, { $push: { 'comments': commentData._id }, $inc: { 'activity.total_comments': 1, 'activity.total_parent_comments': replying_to ? 0 : 1 } });
 
         const notificationObj = {
-            type: replying_to ? "reply" : "comment",
+            type: replying_to ? 'reply' : 'comment',
             blog: _id,
             notification_for: blog_author,
             user: user_id,
@@ -67,7 +81,7 @@ export const addComment = async (req, res) => {
         }
         await new Notification(notificationObj).save();
         return res.status(200).json({
-            message: "Comment added successfully",
+            message: 'Comment added successfully',
             comment,
             commentedAt,
             _id: commentData._id,
@@ -141,14 +155,14 @@ export const deleteComment = async (req, res) => {
     try {
         const comment = await Comment.findById(_id);
         if (!comment) {
-            return res.status(404).json({ error: "Comment not found" });
+            return res.status(404).json({ error: 'Comment not found' });
         }
 
         if (comment.commented_by.toString() !== user_id.toString() || comment.blog_author.toString() !== user_id.toString()) {
-            return res.status(403).json({ error: "You are not authorized to delete this comment" });
+            return res.status(403).json({ error: 'You are not authorized to delete this comment' });
         }
         await deleteComments(_id);
-        return res.status(200).json({ message: "Comment deleted successfully" });
+        return res.status(200).json({ message: 'Comment deleted successfully' });
 
     } catch (error) {
         console.error('Error deleting comment', error);
