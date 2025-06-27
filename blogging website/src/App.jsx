@@ -10,6 +10,7 @@ import BlogPage from './pages/BlogPage';
 import SideNavbar from './components/SideNavbar';
 import ChangePassword from './pages/ChangePassword';
 import EditProfile from './pages/EditProfile';
+import Notifications from './pages/Notifications';
 
 const App = () => {
     return (
@@ -18,6 +19,9 @@ const App = () => {
             <Route path='/editor/:blog_id' element={<Editor/>}/>
             <Route path='/' element={<Navbar />}>
                 <Route index element={<HomePage/>} />
+                <Route path='dashboard' element={<SideNavbar/>}>
+                    <Route path='notifications' element={<Notifications/>}/>
+                </Route>
                 <Route path='settings' element={<SideNavbar/>}>
                     <Route path='edit-profile' element={<EditProfile/>}/>
                     <Route path='change-password' element={<ChangePassword/>}/>
