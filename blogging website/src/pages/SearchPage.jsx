@@ -2,7 +2,7 @@ import { useParams } from 'react-router-dom';
 import { InPageNavigation } from '../components/InPageNavigation';
 import { AnimationWrapper } from '../common/page-animation';
 import BlogPostCard from '../components/BlogPost/BlogPostCard';
-import NoDataMessage from '../components/BlogPost/NoDataMessage';
+import NoDataMessage from '../components/NoDataMessage';
 import { useEffect, useState } from 'react';
 import Loader from '../components/Loader';
 import axios from 'axios';

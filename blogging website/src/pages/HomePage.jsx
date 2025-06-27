@@ -5,7 +5,7 @@ import { useBlog } from '../context/blogContext'
 import Loader from '../components/Loader'
 import BlogPostCard from '../components/BlogPost/BlogPostCard'
 import MinimalBlogPost from '../components/BlogPost/MinimalBlogPost'
-import NoDataMessage from '../components/BlogPost/NoDataMessage'
+import NoDataMessage from '../components/NoDataMessage'
 import LoadMoreDataBtn from '../components/BlogPost/LoadMoreDataBtn'
 
 export const HomePage = () => {

@@ -2,7 +2,7 @@ import { useBlog } from '../../context/blogContext';
 import CommentField from './CommentField';
 import { AnimationWrapper } from '../../common/page-animation';
 import CommentCard from './CommentCard';
-import NoDataMessage from '../BlogPost/NoDataMessage';
+import NoDataMessage from '../NoDataMessage';
 
 const CommentContainer = () => {
     const { setBlog,blog: { _id, title, comments: commentsArr, activity: { total_parent_comments } }, commentsWrapper, setCommentsWrapper, totalParentCommentsLoaded, setTotalParentCommentsLoaded, fetchComments } = useBlog();

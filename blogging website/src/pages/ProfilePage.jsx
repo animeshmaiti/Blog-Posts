@@ -7,7 +7,7 @@ import { authContext } from '../context/authContext';
 import AboutUser from '../components/AboutUser';
 import { filterPaginationData } from '../common/filterPaginationData';
 import { InPageNavigation } from '../components/InPageNavigation';
-import NoDataMessage from '../components/BlogPost/NoDataMessage';
+import NoDataMessage from '../components/NoDataMessage';
 import LoadMoreDataBtn from '../components/BlogPost/LoadMoreDataBtn';
 import BlogPostCard from '../components/BlogPost/BlogPostCard';
 import PageNotFound from './PageNotFound'; 
