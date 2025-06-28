@@ -48,7 +48,7 @@ export const isLikedByUser = async (req, res) => {
 
 export const addComment = async (req, res) => {
     const user_id = req.user._id;
-    const { _id, comment, blog_author, replying_to } = req.body;
+    const { _id, comment, blog_author, replying_to, notification_id } = req.body;
     if (!comment.length) {
         return res.status(403).json({ error: 'You must provide a comment' });
     }
@@ -78,6 +78,9 @@ export const addComment = async (req, res) => {
             notificationObj.replied_on_comment = replying_to;
             const replyingToCommentDoc = await Comment.findOneAndUpdate({ _id: replying_to }, { $push: { children: commentData._id } });
             notificationObj.notification_for = replyingToCommentDoc.commented_by;
+            if (notification_id) {
+                await Notification.findByIdAndUpdate({ _id: notification_id }, { reply: commentData._id });
+            }
         }
         await new Notification(notificationObj).save();
         return res.status(200).json({
@@ -157,7 +160,6 @@ export const deleteComment = async (req, res) => {
         if (!comment) {
             return res.status(404).json({ error: 'Comment not found' });
         }
-
         if (comment.commented_by.toString() !== user_id.toString() || comment.blog_author.toString() !== user_id.toString()) {
             return res.status(403).json({ error: 'You are not authorized to delete this comment' });
         }
