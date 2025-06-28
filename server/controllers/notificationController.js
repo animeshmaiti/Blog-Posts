@@ -34,7 +34,7 @@ export const getNotifications = async (req, res) => {
         const notifications = await Notification.find(findQuery)
             .skip(skip)
             .limit(limit)
-            .populate('blog', 'title blog_id')
+            .populate('blog', 'title blog_id author')
             .populate('user', 'personal_info.profile_img personal_info.fullname personal_info.username')
             .populate('comment', 'comment')
             .populate('replied_on_comment', 'comment')

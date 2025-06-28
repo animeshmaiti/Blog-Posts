@@ -64,7 +64,7 @@ const Notifications = () => {
                                 notifications.results.map((notification, i) => {
                                     return (
                                         <AnimationWrapper key={i} transition={{ delay: i * 0.08 }}>
-                                            <NotificationCard/>
+                                            <NotificationCard data={notification} index={i} notificationState={{notifications,setNotifications}}/>
                                         </AnimationWrapper>
                                     )
                                 })
