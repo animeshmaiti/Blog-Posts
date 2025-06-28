@@ -7,7 +7,7 @@ const NotificationCommentField = ({ _id, blog_author, index = undefined, replyin
     const [comment, setComment] = useState('');
     
     // const { isValid } = useContext(authContext);
-    const { notifications, notifications: { result }, setNotifications } = notificationData;
+    const { notifications, notifications: { results }, setNotifications } = notificationData;
     const handleComment = async () => {
         if (!comment.length) {
             toast.error('Comment cannot be empty')
@@ -28,7 +28,10 @@ const NotificationCommentField = ({ _id, blog_author, index = undefined, replyin
                 }
             )
             let data = response.data;
-            console.log(data);
+            // console.log(data);
+            setIsReplying(false);
+            results[index].reply={comment,_id:data._id};
+            setNotifications({...notifications,results});
             toast.success('Comment added successfully');
         } catch (error) {
             toast.error('Failed to add comment');
