@@ -9,6 +9,7 @@ import toast, { Toaster } from 'react-hot-toast';
 const NotificationCard = ({ data, index, notificationState }) => {
   const {
     _id: notification_id,
+    seen,
     type,
     reply,
     replied_on_comment,
@@ -40,6 +41,7 @@ const NotificationCard = ({ data, index, notificationState }) => {
       }
       target.removeAttribute('disabled');
       setNotifications(prev => ({ ...prev, results, totalDocs: prev.totalDocs - 1 ,deleteDocCount:prev.deleteDocCount+1}));
+      toast.success('Comment deleted successfully');
     } catch (error) {
       target.removeAttribute('disabled');
       toast.error('Failed to delete comment');
@@ -54,7 +56,7 @@ const NotificationCard = ({ data, index, notificationState }) => {
   return (
     <>
     <Toaster/>
-    <div className='p-6 border-b border-grey border-l-black'>
+    <div className={`p-6 border-b border-grey border-l-black ${!seen &&'border-l-2'}`}>
       <div className='flex gap-5 mb-3'>
         <img
           src={profile_img}

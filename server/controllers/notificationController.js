@@ -41,15 +41,19 @@ export const getNotifications = async (req, res) => {
             .populate('reply', 'comment')
             .sort({ createdAt: -1 })
             .select('createdAt type seen reply');
-        
-        return res.status(200).json({notifications})
+
+        await Notification.updateMany(findQuery, { $set: { seen: true } })
+            .skip(skip)
+            .limit(limit);
+            
+        return res.status(200).json({ notifications })
     } catch (error) {
         console.log(error);
         return res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
-export const allNotificationsCount= async (req, res) => {
+export const allNotificationsCount = async (req, res) => {
     const user_id = req.user._id;
     const { filter } = req.body;
     const findQuery = {
@@ -60,8 +64,8 @@ export const allNotificationsCount= async (req, res) => {
         findQuery.type = filter;
     }
     try {
-       const count= await Notification.countDocuments(findQuery);
-        return res.status(200).json({ totalDocs:count });
+        const count = await Notification.countDocuments(findQuery);
+        return res.status(200).json({ totalDocs: count });
     } catch (error) {
         return res.status(500).json({ error: 'Internal Server Error' });
     }

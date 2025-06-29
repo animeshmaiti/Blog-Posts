@@ -5,7 +5,6 @@ import { filterPaginationData } from '../common/filterPaginationData';
 import Loader from '../components/Loader';
 import NoDataMessage from '../components/NoDataMessage';
 import { AnimationWrapper } from '../common/page-animation';
-import { delay } from 'framer-motion';
 import NotificationCard from '../components/Notification/NotificationCard';
 import LoadMoreDataBtn from '../components/BlogPost/LoadMoreDataBtn';
 
@@ -14,12 +13,16 @@ const Notifications = () => {
     const [filter, setFilter] = useState('all');
     const [notifications, setNotifications] = useState(null);
     const filters = ['all', 'like', 'comment', 'reply'];
+    const {authUser:{new_notification_available},setAuthUser}=useContext(authContext);
     const fetchNotifications = async ({ page, deleteCount = 0 }) => {
         try {
             const response = await axios.post('http://localhost:3000/api/notification/notifications', { page, filter, deleteCount }, {
                 withCredentials: true
             })
             const { data: { notifications: data } } = response;
+            if(new_notification_available){
+                setAuthUser(prev => ({ ...prev, new_notification_available: false }));
+            }
             const formattedData = await filterPaginationData({
                 state: notifications,
                 data,
