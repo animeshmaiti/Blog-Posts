@@ -102,3 +102,39 @@ export const createBlog = async (req, res) => {
         }
     }
 }
+
+export const getUserWrittenBlogs = async (req, res) => {
+    const user_id = req.user._id;
+    const { page, draft, query, deleteCount } = req.body;
+    const limit = 5;
+    const skip = (page - 1) * limit;
+    if (deleteCount) {
+        skip -= deleteCount;
+    }
+    try {
+        const blogs = await Blog.find({ author: user_id, draft: Boolean(draft), title: new RegExp(query, 'i') })
+            .skip(skip)
+            .limit(limit)
+            .sort({ 'publishedAt': -1 })
+            .select('title banner publishedAt blog_id activity desc draft -_id');
+
+        return res.status(200).json({ blogs });
+    } catch (error) {
+        console.error('Error fetching user blogs', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+
+}
+
+export const getUserWrittenBlogsCount = async (req, res) => {
+    const user_id = req.user._id;
+    const { draft, query } = req.body;
+
+    try {
+        const count = await Blog.countDocuments({ author: user_id, draft: Boolean(draft), title: new RegExp(query, 'i') });
+        return res.status(200).json({ count });
+    } catch (error) {
+        console.error('Error fetching user blogs count', error);
+        return res.status(500).json({ error: 'Internal server error' });
+    }
+}

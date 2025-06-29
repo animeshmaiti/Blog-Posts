@@ -11,6 +11,7 @@ import SideNavbar from './components/SideNavbar';
 import ChangePassword from './pages/ChangePassword';
 import EditProfile from './pages/EditProfile';
 import Notifications from './pages/Notifications';
+import ManageBlogs from './pages/ManageBlogs';
 
 const App = () => {
     return (
@@ -20,6 +21,7 @@ const App = () => {
             <Route path='/' element={<Navbar />}>
                 <Route index element={<HomePage/>} />
                 <Route path='dashboard' element={<SideNavbar/>}>
+                    <Route path='blogs' element={<ManageBlogs/>}/>
                     <Route path='notifications' element={<Notifications/>}/>
                 </Route>
                 <Route path='settings' element={<SideNavbar/>}>
