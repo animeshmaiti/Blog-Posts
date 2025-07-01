@@ -8,6 +8,7 @@ import Loader from '../components/Loader';
 import NoDataMessage from '../components/NoDataMessage';
 import { AnimationWrapper } from '../common/page-animation';
 import ManagePublishedBlogCard from '../components/ManagePublishedBlogCard';
+import ManageDraftBlogPost from '../components/ManageDraftBlogPost';
 
 const ManageBlogs = () => {
     const { isValid } = useContext(authContext);
@@ -96,6 +97,23 @@ const ManageBlogs = () => {
                             </>
                             : <NoDataMessage message='No published blogs' />
                 }
+                { // Drafts Section
+                    drafts === null ? <Loader /> :
+                        blogs.results.length ?
+                            <>
+                                {
+                                    drafts.results.map((blog, i) => {
+                                        return (
+                                            <AnimationWrapper key={i} transition={{ delay: i * 0.04 }}>
+                                                <ManageDraftBlogPost blog={blog} index={i}/>
+                                            </AnimationWrapper>
+                                        )
+                                    })
+                                }
+                            </>
+                            : <NoDataMessage message='No draft blogs' />
+                }
+
             </InPageNavigation>
         </>
     )
