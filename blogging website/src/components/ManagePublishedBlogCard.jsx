@@ -21,7 +21,7 @@ const BlogStats = ({ stats }) => {
     )
 }
 
-const ManagePublishedBlogCard = ({ blog }) => {
+const ManagePublishedBlogCard = ({ blog,deleteFun }) => {
     const { banner, blog_id, title, publishedAt, activity } = blog || {};
     const [showStat, setShowStat] = useState(false);
     return (
@@ -36,7 +36,7 @@ const ManagePublishedBlogCard = ({ blog }) => {
                     <div className='flex gap-6 mt-3'>
                         <Link to={`/editor/${blog_id}`} className='pr-4 py-2 underline'>Edit</Link>
                         <button className='lg:hidden pr-4 py-2 underline' onClick={() => setShowStat(prev => !prev)}>Stats</button>
-                        <button className='pr-4 py-2 underline text-red'>Delete</button>
+                        <button className='pr-4 py-2 underline text-red' onClick={(e)=>deleteFun(blog,e.target)}>Delete</button>
                     </div>
                 </div>
                 <div className='max-lg:hidden'>
