@@ -9,9 +9,11 @@ import NoDataMessage from '../components/NoDataMessage';
 import { AnimationWrapper } from '../common/page-animation';
 import ManagePublishedBlogCard from '../components/ManagePublishedBlogCard';
 import ManageDraftBlogPost from '../components/ManageDraftBlogPost';
+import { useSearchParams } from 'react-router-dom';
 
 const ManageBlogs = () => {
     const { isValid } = useContext(authContext);
+    let redirectToTab = useSearchParams()[0].get('tab');
     const [activeTab, setActiveTab] = useState(0);
     const [blogs, setBlogs] = useState(null);
     const [drafts, setDrafts] = useState(null);
@@ -67,13 +69,13 @@ const ManageBlogs = () => {
         const { index, blog_id, setStateFun } = blog;
         target.setAttribute('disabled', true);
         try {
-              await axios.post(
+            await axios.post(
                 'http://localhost:3000/api/create/delete-blog',
                 { blog_id },
                 {
-                  withCredentials: true,
+                    withCredentials: true,
                 }
-              );
+            );
             target.removeAttribute('disabled');
             setStateFun(prev => {
                 let { deletedDocCount, totalDocs, results } = prev;
@@ -99,13 +101,14 @@ const ManageBlogs = () => {
         }
     };
     useEffect(() => {
+        if (redirectToTab === 'draft') {
+            setActiveTab(1);
+        }
         if (isValid) {
             getBlogs({ page: 1, draft: false });
             getBlogs({ page: 1, draft: true });
         }
     }, [isValid, query]);
-    console.log(blogs);
-    console.log(drafts);
     return (
         <>
             <h1 className="max-md:hidden">Manage Blogs</h1>

@@ -57,7 +57,7 @@ export const EditorProvider = ({ children }) => {
 
             if (response.status === 200) {
                 toast.success(isDraft ? 'Draft saved successfully!' : 'Blog published successfully!');
-                setTimeout(() => navigate('/dashboard/blogs'), 500);
+                setTimeout(() => navigate(`/dashboard/blogs?tab=${isDraft?'draft':'blog'}`), 500);
             } else {
                 toast.error(isDraft?'Failed to save draft!':'Failed to publish blog!');
             }
