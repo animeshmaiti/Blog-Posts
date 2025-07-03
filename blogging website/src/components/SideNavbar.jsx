@@ -73,7 +73,7 @@ const SideNavbar = () => {
                             Change Password
                         </NavLink>
                     </div>
-                    <div className='max-md:-mt-8 mt-5 w-full'>
+                    <div className={`max-md:-mt-8 mt-5 w-full ${showSideNav ? 'max-md:hidden' : ''}`}>
                         <Outlet />
                     </div>
                 </section>
