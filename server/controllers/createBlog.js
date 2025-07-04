@@ -148,7 +148,7 @@ export const deleteBlog = async (req, res) => {
         const blog=await Blog.findOneAndDelete({blog_id});
         await Notification.deleteMany({blog:blog._id});
         await Comment.deleteMany({blog_id:blog._id});
-        await User.findOneAndUpdate({_id:user_id},{$pull:{blog:blog._id},$inc:{'account_info.total_pots':-1}}); 
+        await User.findOneAndUpdate({_id:user_id},{$pull:{blogs:blog._id},$inc:{'account_info.total_posts':-1}}); 
         res.status(200).json({ message: 'Blog deleted successfully' });
     } catch (error) {
         console.error('Error deleting blog', error);
