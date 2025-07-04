@@ -27,7 +27,7 @@ const Notifications = () => {
                 state: notifications,
                 data,
                 page,
-                countRoute: '/api/notification/all-notifications-count',
+                countRoute: '/notification/all-notifications-count',
                 data_to_send: { filter },
                 verify: true
             });

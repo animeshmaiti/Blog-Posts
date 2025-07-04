@@ -1,17 +1,73 @@
 import React, { useEffect, useState } from 'react'
 import { AnimationWrapper } from '../common/page-animation'
 import { InPageNavigation } from '../components/InPageNavigation'
-import { useBlog } from '../context/blogContext'
 import Loader from '../components/Loader'
 import BlogPostCard from '../components/BlogPost/BlogPostCard'
 import MinimalBlogPost from '../components/BlogPost/MinimalBlogPost'
 import NoDataMessage from '../components/NoDataMessage'
 import LoadMoreDataBtn from '../components/BlogPost/LoadMoreDataBtn'
+import axios from 'axios'
+import { filterPaginationData } from '../common/filterPaginationData'
 
 export const HomePage = () => {
-  const { fetchLatestBlogs, fetchTrendingBlogs, fetchBlogsByCategory, setBlogs, blogs, trendingBlogs, countData } = useBlog()
-  const categories = ['programming', 'hollywood', 'film making', 'social media', 'cooking', 'tech', 'finance', 'travel'];
+  const [blogs, setBlogs] = useState(null);
+  const [trendingBlogs, setTrendingBlogs] = useState(null);
+  const [countData, setCountData] = useState(null);
   const [pageState, setPageState] = useState('home');
+  const categories = ['programming', 'hollywood', 'film making', 'social media', 'cooking', 'tech', 'finance', 'travel'];
+  const fetchLatestBlogs = async ({ page = 1 }) => {
+    // console.log(page);
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/blog/latest-blogs`, { page });
+      const blogsData = response.data.blogs;
+      // console.log(blogsData);
+      let formattedData = await filterPaginationData({
+        create_new_arr: page === 1,  // force reset if it's the first page
+        state: countData,
+        data: blogsData,
+        page,
+        countRoute: '/blog/all-latest-blogs-count'
+      });
+      // console.log(formattedData);
+      setCountData(formattedData);
+      setBlogs(formattedData.results);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const fetchBlogsByCategory = async ({ category, page = 1 }) => {
+    try {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/blog/search-blogs`, {
+        tag: category,
+        page: page
+      });
+      const blogsData = response.data.blogs;
+      // console.log(blogsData);
+      let formattedData = await filterPaginationData({
+        create_new_arr: page === 1,
+        state: countData,
+        data: blogsData,
+        page,
+        countRoute: '/blog/search-blogs-count',
+        data_to_send: { tag: category }
+      });
+      setBlogs(formattedData.results);
+      setCountData(formattedData);
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  const fetchTrendingBlogs = async () => {
+    try {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/blog/trending-blogs`);
+      const blogs = response.data.blogs;
+      // console.log(blogs);
+      setTrendingBlogs(blogs);
+    } catch (error) {
+      console.error(error);
+    }
+  }
   useEffect(() => {
     setBlogs(null);
   }, [pageState]);
