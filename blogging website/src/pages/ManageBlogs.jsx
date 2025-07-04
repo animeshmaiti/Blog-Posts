@@ -10,6 +10,7 @@ import { AnimationWrapper } from '../common/page-animation';
 import ManagePublishedBlogCard from '../components/ManagePublishedBlogCard';
 import ManageDraftBlogPost from '../components/ManageDraftBlogPost';
 import { useSearchParams } from 'react-router-dom';
+import LoadMoreDataBtn from '../components/BlogPost/LoadMoreDataBtn';
 
 const ManageBlogs = () => {
     const { isValid } = useContext(authContext);
@@ -138,6 +139,7 @@ const ManageBlogs = () => {
                                 </AnimationWrapper>
                             );
                         })}
+                        <LoadMoreDataBtn state={blogs} fetchDataFun={getBlogs} additionalParam={{drafts:false,deleteCount:blogs.deletedDocCount}}/>
                     </>
                 ) : (
                     <NoDataMessage message="No published blogs" />
@@ -158,6 +160,7 @@ const ManageBlogs = () => {
                                     </AnimationWrapper>
                                 );
                             })}
+                            <LoadMoreDataBtn state={drafts} fetchDataFun={getBlogs} additionalParam={{drafts:true,deleteCount: drafts.deletedDocCount}}/>
                         </>
                     ) : (
                         <NoDataMessage message="No draft blogs" />

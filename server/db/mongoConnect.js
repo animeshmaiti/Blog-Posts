@@ -4,7 +4,9 @@ import { configDotenv } from "dotenv";
 configDotenv();
 const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/blogPosts';
 const MONGO_OPTIONS = {
-    autoIndex: true
+    autoIndex: true,
+     useNewUrlParser: true,
+    useUnifiedTopology: true
 };
 const mongoConnect = async () => {
     try {
