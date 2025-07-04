@@ -6,7 +6,7 @@ export const uploadImage = async (img) => {
         if (!allowedTypes.includes(img.type)) {
             throw new Error('Unsupported file type');
         }
-        const { data: { url } } = await axios.get('http://localhost:3000/api/create/get-upload-url', {
+        const { data: { url } } = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/create/get-upload-url`, {
             params: { contentType: img.type }
         });
         await axios.put(url, img, {

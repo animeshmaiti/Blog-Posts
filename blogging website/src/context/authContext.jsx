@@ -21,7 +21,7 @@ export const AuthProvider = ({ children }) => {
   const Login = async (inputData) => {
     // setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/login', inputData, {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/login`, inputData, {
         withCredentials: true
       });
       // console.log(response.data);
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
   const SignUp = async (inputData) => {
     // setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/auth/signup', inputData, {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/signup`, inputData, {
         withCredentials: true
       });
       console.log(response.data);
@@ -83,7 +83,7 @@ export const AuthProvider = ({ children }) => {
     try {
       const { token, user } = await authWithGoogle(); // get Firebase user + ID token
 
-      const response = await axios.post('http://localhost:3000/api/auth/google-auth', {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/google-auth`, {
         access_token: token,
       }, {
         withCredentials: true,
@@ -116,7 +116,7 @@ export const AuthProvider = ({ children }) => {
   const LogOut = async () => {
     // setLoading(true);
     try {
-      const response = await axios.get('http://localhost:3000/api/auth/logout', {
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {
         withCredentials: true
       });
       console.log(response.data);
@@ -143,7 +143,7 @@ export const AuthProvider = ({ children }) => {
   const validateUser = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:3000/api/auth/validate', {
+      const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/validate`, {
         withCredentials: true,
       });
       // console.log(res.data); // user info

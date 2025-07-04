@@ -16,7 +16,7 @@ const Notifications = () => {
     const {authUser:{new_notification_available},setAuthUser}=useContext(authContext);
     const fetchNotifications = async ({ page, deleteCount = 0 }) => {
         try {
-            const response = await axios.post('http://localhost:3000/api/notification/notifications', { page, filter, deleteCount }, {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/notification/notifications`, { page, filter, deleteCount }, {
                 withCredentials: true
             })
             const { data: { notifications: data } } = response;

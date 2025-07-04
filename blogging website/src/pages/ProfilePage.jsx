@@ -47,14 +47,14 @@ const ProfilePage = () => {
   const getBlogs = async ({ page = 1, user_id }) => {
     setLoading(true);
     try {
-      const response = await axios.post('http://localhost:3000/api/blog/search-blogs', { page, author: user_id });
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/blog/search-blogs`, { page, author: user_id });
       const blogsData = response.data.blogs;
       let formattedData = await filterPaginationData({
         create_new_arr: page === 1,
         state: countData,
         data: blogsData,
         page,
-        countRoute: '/api/blog/search-blogs-count',
+        countRoute: '/blog/search-blogs-count',
         data_to_send: { author: user_id }
       });
       if (response.status === 200) {
@@ -73,7 +73,7 @@ const ProfilePage = () => {
 
   const fetchUserProfile = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/user/get-profile', { username: profileID });
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/get-profile`, { username: profileID });
       console.log(response.data);
       const profileData = response.data;
       if (!profileData || !profileData._id) {

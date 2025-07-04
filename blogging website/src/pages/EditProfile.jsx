@@ -57,7 +57,7 @@ const EditProfile = () => {
   const fetchUserProfile = async () => {
     try {
       const response = await axios.post(
-        'http://localhost:3000/api/user/get-profile',
+        `${import.meta.env.VITE_BACKEND_URL}/user/get-profile`,
         { username: authUser.username }
       );
       setProfile(response.data);
@@ -84,7 +84,7 @@ const EditProfile = () => {
     try {
       const imgUrl = await uploadImage(updateProfileImg);
       if (imgUrl) {
-        const response = await axios.post('http://localhost:3000/api/user/update-profile-img', { url: imgUrl }, {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/update-profile-img`, { url: imgUrl }, {
           withCredentials: true
         });
         const data = response.data;
@@ -125,7 +125,7 @@ const EditProfile = () => {
     const loadingToast = toast.loading('Updating profile...');
     e.target.setAttribute('disabled', true);
     try {
-      const response = await axios.post('http://localhost:3000/api/user/update-profile', {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/update-profile`, {
         username, bio,
         social_links: {
           youtube,

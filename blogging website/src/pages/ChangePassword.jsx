@@ -28,7 +28,7 @@ const ChangePassword = () => {
         e.target.setAttribute('disabled', true);
         let loadingToast = toast.loading('Updating...');
         try {
-            await axios.post('http://localhost:3000/api/auth/change-password', { oldPassword: currentPassword, newPassword }, {
+            await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/change-password`, { oldPassword: currentPassword, newPassword }, {
                 withCredentials: true
             })
             toast.success('Password changed successfully');

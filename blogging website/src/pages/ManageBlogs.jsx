@@ -22,7 +22,7 @@ const ManageBlogs = () => {
     const getBlogs = async ({ page, draft, deleteCount = 0 }) => {
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/create/user-written-blogs',
+                `${import.meta.env.VITE_BACKEND_URL}/create/user-written-blogs`,
                 { page, draft, query, deleteCount },
                 {
                     withCredentials: true,
@@ -35,7 +35,7 @@ const ManageBlogs = () => {
                 state: draft ? drafts : blogs,
                 data,
                 page,
-                countRoute: '/api/create/user-written-blogs-count',
+                countRoute: '/create/user-written-blogs-count',
                 data_to_send: { draft, query },
                 verify: true,
             });
@@ -70,7 +70,7 @@ const ManageBlogs = () => {
         target.setAttribute('disabled', true);
         try {
             await axios.post(
-                'http://localhost:3000/api/create/delete-blog',
+                `${import.meta.env.VITE_BACKEND_URL}/create/delete-blog`,
                 { blog_id },
                 {
                     withCredentials: true,

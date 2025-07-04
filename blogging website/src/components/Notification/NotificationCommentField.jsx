@@ -15,7 +15,7 @@ const NotificationCommentField = ({ _id, blog_author, index = undefined, replyin
         }
         try {
             const response = await axios.post(
-                'http://localhost:3000/api/interaction/add-comment',
+                `${import.meta.env.VITE_BACKEND_URL}/interaction/add-comment`,
                 {
                     _id,
                     blog_author,

@@ -51,7 +51,7 @@ export const EditorProvider = ({ children }) => {
         const blogData = { ...blog, draft: isDraft };
 
         try {
-            const response = await axios.post('http://localhost:3000/api/create/create-blog', {...blogData,id:blog_id}, {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/create/create-blog`, {...blogData,id:blog_id}, {
                 withCredentials: true,
             });
 

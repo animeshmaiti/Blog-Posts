@@ -22,7 +22,7 @@ const SearchPage = () => {
 
   const searchBlogs = async ({ page = 1, create_new_arr = false }) => {
     try {
-      const response = await axios.post('http://localhost:3000/api/blog/search-blogs', {
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/blog/search-blogs`, {
         query: query,
         page: page
       });
@@ -33,7 +33,7 @@ const SearchPage = () => {
         state: countData,
         data: blogsData,
         page,
-        countRoute: '/api/blog/search-blogs-count',
+        countRoute: '/blog/search-blogs-count',
         data_to_send: { query: query }
       });
       // console.log(formattedData);
@@ -51,7 +51,7 @@ const SearchPage = () => {
 
   const searchUsers = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/api/user/search-users', { query });
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/user/search-users`, { query });
       const usersData = response.data.users;
       setUsers(usersData);
       console.log(usersData);

@@ -33,7 +33,7 @@ const NotificationCard = ({ data, index, notificationState }) => {
   const handleDelete = async (comment_id, type, target) => {
     target.setAttribute('disabled', true);
     try {
-      await axios.post('http://localhost:3000/api/interaction/delete-comment', { _id: comment_id}, { withCredentials: true });
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/interaction/delete-comment`, { _id: comment_id}, { withCredentials: true });
       if (type === 'comment') {
         results.splice(index, 1);
       } else {

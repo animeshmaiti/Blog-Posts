@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { useBlog } from '../../context/blogContext'
 import { Link } from 'react-router-dom';
 import { authContext } from '../../context/authContext';
@@ -12,7 +12,7 @@ const BlogInteraction = () => {
 
   useEffect(()=>{
     if(isValid){
-      axios.post('http://localhost:3000/api/interaction/is-liked-by-user',{_id},{
+      axios.post(`${import.meta.env.VITE_BACKEND_URL}/interaction/is-liked-by-user`,{_id},{
         withCredentials:true
       }).then(({data:{liked_by_user}})=>{
         setIsLikedByUser(Boolean(liked_by_user));
@@ -49,7 +49,7 @@ const BlogInteraction = () => {
       }
 
       try {
-        const response = await axios.post('http://localhost:3000/api/interaction/like-blog', { _id, isLikedByUser }, {
+        const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/interaction/like-blog`, { _id, isLikedByUser }, {
           withCredentials: true
         });
         toast.success(response.data.message);

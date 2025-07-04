@@ -19,7 +19,7 @@ export const Navbar = () => {
   }
   useEffect(() => {
     if (isValid) {
-      axios.get('http://localhost:3000/api/notification/new-notifications', {
+      axios.get(`${import.meta.env.VITE_BACKEND_URL}/notification/new-notifications`, {
         withCredentials: true
       }).then(({ data }) => {
         setAuthUser(prev => ({ ...prev, ...data }));

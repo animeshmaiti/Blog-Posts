@@ -21,7 +21,7 @@ export const filterPaginationData = async ({
         obj = { ...state, results: [...state.results, ...data], page: page };
     } else {
         try{
-            const response = await axios.post('http://localhost:3000'+countRoute, data_to_send,headers);
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}`+countRoute, data_to_send,headers);
             const {totalDocs}=response.data;
             obj={
                 results: data,

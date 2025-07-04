@@ -36,7 +36,7 @@ export const BlogProvider = ({ children }) => {
     const fetchLatestBlogs = async ({ page = 1 }) => {
         // console.log(page);
         try {
-            const response = await axios.post('http://localhost:3000/api/blog/latest-blogs', { page });
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/blog/latest-blogs`, { page });
             const blogsData = response.data.blogs;
             // console.log(blogsData);
             let formattedData = await filterPaginationData({
@@ -44,7 +44,7 @@ export const BlogProvider = ({ children }) => {
                 state: countData,
                 data: blogsData,
                 page,
-                countRoute: '/api/blog/all-latest-blogs-count'
+                countRoute: '/blog/all-latest-blogs-count'
             });
             // console.log(formattedData);
             if (response.status === 200) {
@@ -61,7 +61,7 @@ export const BlogProvider = ({ children }) => {
 
     const fetchTrendingBlogs = async () => {
         try {
-            const response = await axios.get('http://localhost:3000/api/blog/trending-blogs');
+            const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/blog/trending-blogs`);
             const blogs = response.data.blogs;
             // console.log(blogs);
             if (response.status === 200) {
@@ -77,7 +77,7 @@ export const BlogProvider = ({ children }) => {
 
     const fetchBlogsByCategory = async ({ category, page = 1 }) => {
         try {
-            const response = await axios.post('http://localhost:3000/api/blog/search-blogs', {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}i/blog/search-blogs`, {
                 tag: category,
                 page: page
             });
@@ -88,7 +88,7 @@ export const BlogProvider = ({ children }) => {
                 state: countData,
                 data: blogsData,
                 page,
-                countRoute: '/api/blog/search-blogs-count',
+                countRoute: '/blog/search-blogs-count',
                 data_to_send: { tag: category }
             });
             // console.log(formattedData);
@@ -106,13 +106,13 @@ export const BlogProvider = ({ children }) => {
 
     const fetchBlog = async (blog_id) => {
         try {
-            const response = await axios.post('http://localhost:3000/api/blog/get-blog', { blog_id }, {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/blog/get-blog`, { blog_id }, {
                 withCredentials: true
             });
             const blogData = response.data.blog;
             blogData.comments = await fetchComments({ blog_id: blogData._id, setParentCommentCount: setTotalParentCommentsLoaded });
             // console.log(blogData);
-            const suggestedBlogs = await axios.post('http://localhost:3000/api/blog/search-blogs', { tag: blogData.tags[0], limit: 5, exclude_blog: blog_id });
+            const suggestedBlogs = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/blog/search-blogs`, { tag: blogData.tags[0], limit: 5, exclude_blog: blog_id });
             if (response.status === 200 && suggestedBlogs.status === 200) {
                 setLoading(false);
                 setSimilarBlogs(suggestedBlogs.data.blogs);
@@ -132,7 +132,7 @@ export const BlogProvider = ({ children }) => {
     const fetchComments = async ({ skip = 0, blog_id, setParentCommentCount, comment_array = null }) => {
         try {
             let res;
-            const response = await axios.post('http://localhost:3000/api/interaction/get-blog-comment', {
+            const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/interaction/get-blog-comment`, {
                 blog_id,
                 skip
             });

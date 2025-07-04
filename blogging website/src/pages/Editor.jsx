@@ -21,7 +21,7 @@ export const Editor = () => {
             }
 
             try {
-                const { data: { blog } } = await axios.post('http://localhost:3000/api/blog/get-blog', {
+                const { data: { blog } } = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/blog/get-blog`, {
                     blog_id,
                     draft: true,
                     mode: 'edit'
