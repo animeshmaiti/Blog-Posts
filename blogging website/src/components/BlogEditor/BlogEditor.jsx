@@ -1,17 +1,21 @@
 import { Link, useParams } from 'react-router-dom';
-import logo from '@assets/logo.png';
+import darkLogo from '@assets/logo-dark.png';
+import lightLogo from '@assets/logo-light.png';
 import { useContext, useEffect } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 import EditorJS from '@editorjs/editorjs';
 
-import defaultBanner from '@assets/blog banner.png';
+import darkBanner from '@assets/blog-banner-dark.png';
+import lightBanner from '@assets/blog-banner-light.png';
 import { AnimationWrapper } from '../../common/page-animation';
 
 import tools from './tools';
 import { EditorContext } from '../../context/editorContext';
+import { authContext } from '../../context/authContext';
 
 export const BlogEditor = () => {
     const { blog, blog: { title, banner, content, tags, desc }, uploadBanner, setBlog, textEditor, setTextEditor, setEditorState, publishBlog } = useContext(EditorContext);
+    const {theme}=useContext(authContext);
     useEffect(() => {
         let editor;
 
@@ -51,7 +55,7 @@ export const BlogEditor = () => {
     }
     const handleError = (e) => {
         let img = e.target;
-        img.src = defaultBanner;
+        img.src = theme === 'light' ? lightBanner : darkBanner;
     }
     const handlePublishEvent = async () => {
         if (!title.length) {
@@ -94,7 +98,7 @@ export const BlogEditor = () => {
         <>
             <nav className='navbar'>
                 <Link to='/' className='flex-none w-10'>
-                    <img src={logo} alt='img' />
+                    <img src={theme==='light'?darkLogo:lightLogo} alt='img' />
                 </Link>
                 <p className='max-md:hidden text-black line-clamp-1 w-full'>
                     {title.length > 0 ? title : 'Blog Title'}

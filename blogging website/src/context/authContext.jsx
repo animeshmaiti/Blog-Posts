@@ -6,12 +6,15 @@ import { useNavigate } from 'react-router-dom';
 
 export const authContext = createContext();
 
+const darkThemePreference = ()=>window.matchMedia('(prefers-color-scheme: dark)').matches;
+
 export const AuthProvider = ({ children }) => {
   const [authUser, setAuthUser] = useState(
     JSON.parse(localStorage.getItem('user')) || null
   );
   const [isValid, setIsValid] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [theme, setTheme] = useState(()=>darkThemePreference() ? 'dark' : 'light');
   const navigate = useNavigate();
 
   // ==================Login=============================
@@ -165,11 +168,20 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    validateUser(); // auto-run on app load
+    const storedTheme = sessionStorage.getItem('theme');
+    if (storedTheme) {
+      setTheme(() => {
+        document.body.setAttribute('data-theme', storedTheme);
+        return storedTheme;
+      });
+    } else {
+      document.body.setAttribute('data-theme', theme);
+    }
+    validateUser();
   }, []);
 
   return (
-    <authContext.Provider value={{ Login, SignUp, LogOut, GoogleAuth, validateUser, authUser, setAuthUser, isValid, loading, setLoading }}>
+    <authContext.Provider value={{ Login, SignUp, LogOut, GoogleAuth, validateUser, authUser, setAuthUser, isValid, loading, setLoading, theme, setTheme }}>
       {children}
     </authContext.Provider>
   );

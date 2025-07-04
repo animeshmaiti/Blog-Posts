@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from 'react'
-import logo from '@assets/logo.png'
+import darkLogo from '@assets/logo-dark.png'
+import lightLogo from '@assets/logo-light.png'
 import { Link, Outlet } from 'react-router-dom'
 import { SearchBox } from './SearchBox';
 import { authContext } from '../../context/authContext';
@@ -7,7 +8,7 @@ import { UserNavigationPanel } from '../UserNavigation/UserNavigationPanel';
 import axios from 'axios';
 
 export const Navbar = () => {
-  const { isValid, authUser, setAuthUser } = useContext(authContext);
+  const { isValid, authUser, setAuthUser, theme, setTheme } = useContext(authContext);
   const { profile_img, new_notification_available } = authUser || {};
   const [userNavPanel, setUserNavPanel] = useState(false);
 
@@ -27,17 +28,26 @@ export const Navbar = () => {
       });
     }
   }, [isValid]);
+  const handleThemeChange = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    document.body.setAttribute('data-theme', newTheme);
+    setTheme(newTheme);
+    sessionStorage.setItem('theme', newTheme);
+  }
   return (
     <>
       <nav className='navbar z-50'>
         <Link to='/' className='flex-none w-10'>
-          <img src={logo} alt='logo' className='w-full' />
+          <img src={theme == 'light' ? darkLogo : lightLogo} alt='logo' className='w-full' />
         </Link>
         <SearchBox />
         <Link to='/editor' className='hidden md:flex gap-2 link'>
           <i className="fi fi-rr-file-edit"></i>
           <p>Write</p>
         </Link>
+        <button className='w-12 h-12 rounded-full bg-grey relative hover:bg-black/10' onClick={handleThemeChange}>
+          <i className={`fi fi-rr-${theme=='light'?'moon-stars':'sun'} text-2xl block mt-1`}></i>
+        </button>
         {
           isValid ?
             <>
