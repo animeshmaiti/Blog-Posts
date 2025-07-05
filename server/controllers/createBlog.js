@@ -38,7 +38,11 @@ export const generateUploadURL = async (req, res) => {
 }
 
 export const createBlog = async (req, res) => {
+    const isAdmin = req.user.admin;
     const authorId = req.user._id;
+    if (!isAdmin) {
+        return res.status(403).json({ error: 'You are not authorized to create a blog' });
+    }
     let { title, desc, banner, tags, content, draft, id } = req.body;
     if (!title.length || title.length > 100) {
         return res.status(403).json({ error: 'You must provide blog title under 100 characters' });
@@ -125,7 +129,6 @@ export const getUserWrittenBlogs = async (req, res) => {
         console.error('Error fetching user blogs', error);
         return res.status(500).json({ error: 'Internal server error' });
     }
-
 }
 
 export const getUserWrittenBlogsCount = async (req, res) => {
@@ -134,7 +137,7 @@ export const getUserWrittenBlogsCount = async (req, res) => {
 
     try {
         const count = await Blog.countDocuments({ author: user_id, draft: Boolean(draft), title: new RegExp(query, 'i') });
-        return res.status(200).json({totalDocs: count });
+        return res.status(200).json({ totalDocs: count });
     } catch (error) {
         console.error('Error fetching user blogs count', error);
         return res.status(500).json({ error: 'Internal server error' });
@@ -143,12 +146,16 @@ export const getUserWrittenBlogsCount = async (req, res) => {
 
 export const deleteBlog = async (req, res) => {
     const user_id = req.user._id;
-    const {blog_id}=req.body;
+    const isAdmin = req.user.admin;
+    if (!isAdmin) {
+        return res.status(403).json({ error: 'You are not authorized to delete a blog' });
+    }
+    const { blog_id } = req.body;
     try {
-        const blog=await Blog.findOneAndDelete({blog_id});
-        await Notification.deleteMany({blog:blog._id});
-        await Comment.deleteMany({blog_id:blog._id});
-        await User.findOneAndUpdate({_id:user_id},{$pull:{blogs:blog._id},$inc:{'account_info.total_posts':-1}}); 
+        const blog = await Blog.findOneAndDelete({ blog_id });
+        await Notification.deleteMany({ blog: blog._id });
+        await Comment.deleteMany({ blog_id: blog._id });
+        await User.findOneAndUpdate({ _id: user_id }, { $pull: { blogs: blog._id }, $inc: { 'account_info.total_posts': -1 } });
         res.status(200).json({ message: 'Blog deleted successfully' });
     } catch (error) {
         console.error('Error deleting blog', error);

@@ -6,9 +6,10 @@ import { PublishForm } from '../components/BlogEditor/PublishForm';
 import { EditorContext } from '../context/editorContext';
 import Loader from '../components/Loader';
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
 export const Editor = () => {
-    const { isValid, loading, setLoading } = useContext(authContext);
+    const { isValid, loading, setLoading, authUser: { admin } } = useContext(authContext);
     const { editorState, setBlog } = useContext(EditorContext);
     const { blog_id } = useParams();
     useEffect(() => {
@@ -40,6 +41,10 @@ export const Editor = () => {
     }
     if (!isValid) {
         return <Navigate to='/signin' />
+    }
+    if (!admin) {
+        toast.error('You are not authorized to access this page.');
+        return <Navigate to='/404' />
     }
     return (
         editorState === 'editor' ? (

@@ -119,8 +119,8 @@ export const AuthProvider = ({ children }) => {
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`, {
         withCredentials: true
       });
-      console.log(response.data);
       localStorage.removeItem('user');
+      
       setAuthUser(null);
       setIsValid(false); // set user invalid
 
@@ -146,7 +146,6 @@ export const AuthProvider = ({ children }) => {
       const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/auth/validate`, {
         withCredentials: true,
       });
-      // console.log(res.data); // user info
       localStorage.setItem('user', JSON.stringify(res.data));
       setIsValid(true); // set user valid
       setAuthUser(res.data); // store user
@@ -162,7 +161,6 @@ export const AuthProvider = ({ children }) => {
       setIsValid(false);
     } finally {
       setLoading(false);
-
       console.log('validateUser function executed');
     }
   };

@@ -64,7 +64,8 @@ export const signup = async (req, res) => {
             return res.status(201).json({
                 profile_img: newUser.personal_info.profile_img,
                 username: newUser.personal_info.username,
-                email: newUser.personal_info.email
+                email: newUser.personal_info.email,
+                admin: newUser.admin
             });
         } catch (err) {
             console.log('Error creating user', err);
@@ -107,7 +108,8 @@ export const login = async (req, res) => {
             return res.status(200).json({
                 profile_img: user.personal_info.profile_img,
                 username: user.personal_info.username,
-                email: user.personal_info.email
+                email: user.personal_info.email,
+                admin: user.admin
             });
         } else {
             return res.status(403).json({
@@ -153,7 +155,8 @@ export const GoogleAuth = async (req, res) => {
         return res.status(200).json({
             profile_img: picture,
             username: user.personal_info.username,
-            email: user.personal_info.email
+            email: user.personal_info.email,
+            admin: user.admin
         });
 
     } catch (err) {

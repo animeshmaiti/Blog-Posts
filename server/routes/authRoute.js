@@ -11,6 +11,7 @@ router.get('/validate', protectRoute, (req, res) => {
   const {
     personal_info: { fullname, username, email, profile_img },
     account_info,
+    admin,
     social_links
   } = req.user;
   res.status(200).json({
@@ -19,6 +20,7 @@ router.get('/validate', protectRoute, (req, res) => {
     email,
     profile_img,
     account_info,
+    admin,
     social_links
   });
 });

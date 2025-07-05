@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useContext, useEffect, useState } from 'react';
 import { filterPaginationData } from '../common/filterPaginationData';
 import { authContext } from '../context/authContext';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { InPageNavigation } from '../components/InPageNavigation';
 import Loader from '../components/Loader';
 import NoDataMessage from '../components/NoDataMessage';
@@ -40,13 +40,13 @@ const ManageBlogs = () => {
                 data_to_send: { draft, query },
                 verify: true,
             });
-            console.log(formattedData, draft);
             if (draft) {
                 setDrafts(formattedData);
             } else {
                 setBlogs(formattedData);
             }
         } catch (error) {
+            toast.error(error.response?.data?.error || 'Error fetching blogs');
             console.error('Error fetching blogs:', error);
         }
     };
@@ -84,11 +84,6 @@ const ManageBlogs = () => {
                 if (!deletedDocCount) {
                     deletedDocCount = 0;
                 }
-                console.log({
-                    ...prev,
-                    totalDocs: totalDocs - 1,
-                    deletedDocCount: deletedDocCount + 1,
-                });
                 return {
                     ...prev,
                     totalDocs: totalDocs - 1,
@@ -96,6 +91,7 @@ const ManageBlogs = () => {
                 };
             })
         } catch (error) {
+            toast.error(error.response?.data?.error || 'Error deleting blog');
             console.error('Error deleting blog:', error);
             target.removeAttribute('disabled');
             return;

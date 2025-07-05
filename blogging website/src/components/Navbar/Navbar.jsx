@@ -9,7 +9,7 @@ import axios from 'axios';
 
 export const Navbar = () => {
   const { isValid, authUser, setAuthUser, theme, setTheme } = useContext(authContext);
-  const { profile_img, new_notification_available } = authUser || {};
+  const { profile_img, new_notification_available,admin } = authUser || {};
   const [userNavPanel, setUserNavPanel] = useState(false);
 
   const handleBlur = () => {
@@ -41,12 +41,15 @@ export const Navbar = () => {
           <img src={theme == 'light' ? darkLogo : lightLogo} alt='logo' className='w-full' />
         </Link>
         <SearchBox />
-        <Link to='/editor' className='hidden md:flex gap-2 link'>
-          <i className="fi fi-rr-file-edit"></i>
-          <p>Write</p>
-        </Link>
+        {
+          isValid && admin &&
+          <Link to='/editor' className='hidden md:flex gap-2 link'>
+            <i className="fi fi-rr-file-edit"></i>
+            <p>Write</p>
+          </Link>
+        }
         <button className='w-12 h-12 rounded-full bg-grey relative hover:bg-black/10' onClick={handleThemeChange}>
-          <i className={`fi fi-rr-${theme=='light'?'moon-stars':'sun'} text-2xl block mt-1`}></i>
+          <i className={`fi fi-rr-${theme == 'light' ? 'moon-stars' : 'sun'} text-2xl block mt-1`}></i>
         </button>
         {
           isValid ?
