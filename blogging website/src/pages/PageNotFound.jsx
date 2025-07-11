@@ -16,7 +16,7 @@ const PageNotFound = () => {
       <h1 className='text-4xl font-gelasio leading-7'>Page Not Found</h1>
       <p className='text-dark-grey text-xl leading-7'>The page you are looking for dose not exists. Head back to the <Link to={'/'} className='text-black underline'>Home Page</Link> </p>
       <div className='mt-auto'>
-        <img src={theme === 'light' ? darkFullLogo : lightFullLogo} className='h-8 object-contain block mx-auto select-none' />
+        <img src={theme === 'light' ? darkFullLogo : lightFullLogo} className='h-14 object-contain block mx-auto select-none' />
         <p className='mt-5 text-dark-grey'>Read millions of stories written by people like you</p>
       </div>
     </section>
