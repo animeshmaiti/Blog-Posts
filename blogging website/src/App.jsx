@@ -14,6 +14,7 @@ import Notifications from './pages/Notifications';
 import ManageBlogs from './pages/ManageBlogs';
 import { BlogProvider } from './context/blogContext';
 import { EditorProvider } from './context/editorContext';
+import About from './pages/About';
 
 const App = () => {
     return (
@@ -38,6 +39,7 @@ const App = () => {
                     <Route path='edit-profile' element={<EditProfile />} />
                     <Route path='change-password' element={<ChangePassword />} />
                 </Route>
+                <Route path='about' element={<About />} />
                 <Route path='signin' element={<UserAuthForm type='sign-in' />} />
                 <Route path='signup' element={<UserAuthForm type='sign-up' />} />
                 <Route path='search/:query' element={<SearchPage />} />

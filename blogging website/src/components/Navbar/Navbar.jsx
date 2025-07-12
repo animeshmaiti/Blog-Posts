@@ -9,7 +9,7 @@ import axios from 'axios';
 
 export const Navbar = () => {
   const { isValid, authUser, setAuthUser, theme, setTheme } = useContext(authContext);
-  const { profile_img, new_notification_available,admin } = authUser || {};
+  const { profile_img, new_notification_available, admin } = authUser || {};
   const [userNavPanel, setUserNavPanel] = useState(false);
 
   const handleBlur = () => {
@@ -81,7 +81,10 @@ export const Navbar = () => {
               </Link>
             </>
         }
-
+        <Link to='/about' className='hidden md:flex gap-2 link'>
+          <i className="fi fi-rr-info"></i>
+          <p>About Us</p>
+        </Link>
       </nav>
       <Outlet />
     </>
