@@ -34,7 +34,7 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
     ```
 4. Set up environment variables:
    - Create a `.env` file in both of the root directory (frontend & backend) and add the necessary environment variables for
-   - Frontend:
+   - Frontend:<br>
         ```env
         VITE_FIREBASE_API_KEY="your firebase api key"
         VITE_FIREBASE_AUTH_DOMAIN="your firebase auth domain"
@@ -45,7 +45,7 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
 
         VITE_BACKEND_URL="http://localhost:5000" # or your backend URL
         ```
-    - Backend:
+    - Backend:<br>
         ```env
             MONGO_URI="your mongodb uri"
             PORT=3000
@@ -88,8 +88,8 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
     <img src="./images/publicAccess.png" alt="AWS S3 Bucket" width="600">
    - Set bucket policy to allow public access:
    - Edit bucket policy in the S3 bucket permissions tab and go to generate bucket policy and paste the following code, replacing `your-bucket-name` with your actual bucket name:<br>
-    <img src="./images/bucketPolicy.png" alt="AWS S3 Bucket Policy" width="600">
-   ```
+    <img src="./images/bucketPolicy.png" alt="AWS S3 Bucket Policy" width="600"><br>
+   ```json
    {
     "Version": "2012-10-17",
     "Id": "GeneratedPolicyId",
@@ -107,8 +107,8 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
     ]
    }
    ```
-   - Bucket CORS configuration:
-   ```
+   - Bucket CORS configuration:<br>
+   ```json
    [
     {
         "AllowedHeaders": ["*"],
@@ -122,8 +122,8 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
      - search action and select `s3:GetObject` and `s3:PutObject` then at Resources Specify ARNs. Add Arns
      - create the policy and attach it to the user you will create in IAM.
     <img src="./images/iamPolicy.png" alt="AWS IAM Policy" width="600">
-    <img src="./images/arns.png" alt="AWS IAM Policy 2" width="600">
-   ```
+    <img src="./images/arns.png" alt="AWS IAM Policy 2" width="600"><br>
+   ```json
    {
     "Version": "2012-10-17",
     "Statement": [
@@ -139,22 +139,22 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
    }
    ```
    - Go to IAM > Users > Create user > Programmatic access > Attach existing policies directly
-   - after creating the user, go to user > Security credentials > Create access key > Download the CSV file containing your AWS Access Key ID and Secret Access Key.
+   - after creating the user, go to user > Security credentials > Create access key > Download the CSV file containing your AWS Access Key ID and Secret Access Key.<br>
   <img src="./images/cak1.png" alt="AWS User" width="600">
   <img src="./images/cak2.png" alt="AWS User" width="600">
   <img src="./images/cak3.png" alt="AWS User" width="600">
-7. Start the backend server from the backend root directory:
-   ```
+7. Start the backend server from the backend root directory:<br>
+   ```bash
     npm start
    ```
-8. Start the frontend server from the frontend root directory:
-   ```
+8. Start the frontend server from the frontend root directory:<br>
+   ```bash
     npm run dev
    ```
 9. Open your browser and navigate to `http://localhost:5173` to access the application.
 10. For deployment, follow the instructions in the respective sections below.
-    - in backend utils/generateToken.js file
-    ```
+    - in backend utils/generateToken.js file<br>
+    ```js
         res.cookie("token", token, {
         httpOnly: true,// client side js cannot access the cookie prevents xss attack
         sameSite: "strict",// CSRF attack
@@ -162,22 +162,22 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
         secure: process.env.NODE_ENV === "production" ? true : false // if in production then secure is true, otherwise false
     });
     ```
-    - server.js file replace origin with your frontend url (deployed)
-    ```
+    - server.js file replace origin with your frontend url (deployed)<br>
+    ```js
     server.use(cors({
     origin: 'http://localhost:5173',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true,
     }));
     ```
-    - in frontend replace the backend url with your backend url (deployed)
-    ```
+    - in frontend replace the backend url with your backend url (deployed)<br>
+    ```env
     VITE_BACKEND_URL="https://your-backend-url.com/api"
     ```
 ### Note:
 i only allowed admin users can only create,edit,manage blogs others feature are available for all users. I did this to prevent spam and misuse of the platform. Because im running this on free platforms like aws free tire,render free, vercal free so if spam happens it will exceed my free tire in aws and cost me money. You can change this behavior in the backend code if you want to allow all users to create blogs. Follow the instruction:
- - in backend/Schema/User.js file you can remove this or change the default value to true or if you want to allow a specific user/s to create blogs you can set the admin property to true in the mongoDB database for that user.
- ```
+ - in backend/Schema/User.js file you can remove this or change the default value to true or if you want to allow a specific user/s to create blogs you can set the admin property to true in the mongoDB database for that user.<br>
+ ```js
     admin:{
         type:Boolean,
         default: false
