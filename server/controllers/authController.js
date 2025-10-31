@@ -200,7 +200,12 @@ export const changePassword = async (req, res) => {
 
 export const logout = (req, res) => {
     try {
-        res.clearCookie('token');
+        res.clearCookie('token', {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === "production" ? true : false,
+            sameSite: 'strict',
+            path: '/',
+        });
         res.status(200).json({ message: 'Logged out successfully' });
     } catch (error) {
         console.log('during logout', error.message);
