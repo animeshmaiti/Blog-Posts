@@ -72,12 +72,12 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
    - Create a Firebase project and enable authentication.
    - Add your Firebase configuration to the `.env` file as shown above.
    - frontend:<br>
-    <img src="./images/projectSettings.png" alt="Firebase Configuration" width="400">
+    <img src="./images/projectSettings.png" alt="Firebase Configuration" width="400"><br>
    - Go to Firebase Console > Project Settings > General > Your apps > Add app > Web <br>
-   <img src="./images/frontend.png" alt="Firebase Web App" width="400">
+   <img src="./images/frontend.png" alt="Firebase Web App" width="400"><br>
    - Backend:
    - Go to Firebase Console > Project Settings > Service accounts > Generate new private key. in json file all the credentials are present <br>
-    <img src="./images/backend.png" alt="Firebase Service Account" width="400">
+    <img src="./images/backend.png" alt="Firebase Service Account" width="400"><br>
 6. Set up AWS S3:
    - Create an S3 bucket and configure it for public access.
    - Add your AWS credentials to the `.env` file as shown above.
@@ -85,7 +85,7 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
    - Create an AWS free tire account and create a bucket in S3.
    - Go to AWS Management Console > S3 > Create bucket
    - After creating the bucket, go to the bucket's permissions tab and off the `Block all public access`.<br>
-    <img src="./images/publicAccess.png" alt="AWS S3 Bucket" width="600">
+    <img src="./images/publicAccess.png" alt="AWS S3 Bucket" width="600"><br>
    - Set bucket policy to allow public access:
    - Edit bucket policy in the S3 bucket permissions tab and go to generate bucket policy and paste the following code, replacing `your-bucket-name` with your actual bucket name:<br>
     <img src="./images/bucketPolicy.png" alt="AWS S3 Bucket Policy" width="600"><br>
@@ -121,7 +121,7 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
    - After Setting up the bucket got to IAM > Policies > Create Policy > select service S3 and add the following permissions:
      - search action and select `s3:GetObject` and `s3:PutObject` then at Resources Specify ARNs. Add Arns
      - create the policy and attach it to the user you will create in IAM.
-    <img src="./images/iamPolicy.png" alt="AWS IAM Policy" width="600">
+    <img src="./images/iamPolicy.png" alt="AWS IAM Policy" width="600"><br>
     <img src="./images/arns.png" alt="AWS IAM Policy 2" width="600"><br>
    ```json
    {
@@ -140,19 +140,19 @@ Open Writer is a minimalist, distraction-free platform tailored for both writers
    ```
    - Go to IAM > Users > Create user > Programmatic access > Attach existing policies directly
    - after creating the user, go to user > Security credentials > Create access key > Download the CSV file containing your AWS Access Key ID and Secret Access Key.<br>
-  <img src="./images/cak1.png" alt="AWS User" width="600">
-  <img src="./images/cak2.png" alt="AWS User" width="600">
-  <img src="./images/cak3.png" alt="AWS User" width="600">
-7. Start the backend server from the backend root directory:<br>
+  <img src="./images/cak1.png" alt="AWS User" width="600"><br>
+  <img src="./images/cak2.png" alt="AWS User" width="600"><br>
+  <img src="./images/cak3.png" alt="AWS User" width="600"><br>
+1. Start the backend server from the backend root directory:<br>
    ```bash
     npm start
    ```
-8. Start the frontend server from the frontend root directory:<br>
+2. Start the frontend server from the frontend root directory:<br>
    ```bash
     npm run dev
    ```
-9. Open your browser and navigate to `http://localhost:5173` to access the application.
-10. For deployment, follow the instructions in the respective sections below.
+3. Open your browser and navigate to `http://localhost:5173` to access the application.
+4.  For deployment, follow the instructions in the respective sections below.
     - in backend utils/generateToken.js file<br>
     ```js
         res.cookie("token", token, {
