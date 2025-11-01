@@ -1,18 +1,279 @@
-{
-    "fullname": "animesh maiti",
-    "username": "animesh1",
-    "email": "animesh@yahoo.com",
-    "profile_img": "https://api.dicebear.com/6.x/fun-emoji/svg?seed=Jack",
-    "account_info": {
-        "total_posts": 0,
-        "total_reads": 0
+[
+    {
+        "fullname": "animesh maiti",
+        "username": "animesh1",
+        "email": "animesh@yahoo.com",
+        "profile_img": "https://api.dicebear.com/6.x/fun-emoji/svg?seed=Jack",
+        "account_info": {
+            "total_posts": 0,
+            "total_reads": 0
+        },
+        "social_links": {
+            "youtube": "",
+            "instagram": "",
+            "facebook": "",
+            "twitter": "",
+            "github": "",
+            "website": ""
+        }
     },
-    "social_links": {
-        "youtube": "",
-        "instagram": "",
-        "facebook": "",
-        "twitter": "",
-        "github": "",
-        "website": ""
+    {
+        "activity": {
+            "total_likes": 0,
+            "total_comments": 0,
+            "total_reads": 7,
+            "total_parent_comments": 0
+        },
+        "_id": "68238dff4ade4b7e7034a695",
+        "blog_id": "Cybersecurity-basics-How-businesses-can-prepare-and-defend-against-cyber-attacksOdwBlvGPdF8Parhlkazgc",
+        "title": "Cybersecurity basics: How businesses can prepare and defend against cyber attacks",
+        "banner": "https://blogpost-resources-007.s3.ap-south-1.amazonaws.com/ZcSJbrNR8iQIC31o0NiG1-1747160539988.png",
+        "desc": "To effectively protect your company and customer information, you need to understand three primary cybersecurity threats to small businesses",
+        "content": [
+            {
+                "time": 1747160544923,
+                "blocks": [
+                    {
+                        "id": "Rl2fwVmgdm",
+                        "type": "header",
+                        "data": {
+                            "text": "What is cybersecurity?",
+                            "level": 2
+                        }
+                    },
+                    {
+                        "id": "83SBTyTsDz",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "Cybersecurity is the safeguarding of protected information and critical data online. Organizations and small businesses implement cybersecurity measures to defend sensitive data from both internal and external threats and to best prepare for an attack."
+                        }
+                    },
+                    {
+                        "id": "32FfO8f2uf",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "To improve defense systems and unify federal agencies, US President Joe Biden signed the <a href=\"https://www.congress.gov/bill/117th-congress/senate-bill/3600/text?r=3&amp;s=2#toc-id1E3C7124ACBA4C4986D04F51AD1E8045\">Strengthening American Cybersecurity Act</a> into law on March 1, 2022. The legislation now requires all <a href=\"https://www.cisa.gov/topics/critical-infrastructure-security-and-resilience/critical-infrastructure-sectors\">critical infrastructure entities</a> to report attacks to the <a href=\"https://www.cisa.gov/\">Cybersecurity and Infrastructure Security Agency (CISA)</a>, the government organization aimed to manage and reduce risk."
+                        }
+                    },
+                    {
+                        "id": "Ei-U5OTaJi",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "That being said, as national <a target=\"_blank\" href=\"https://www.wix.com/blog/website-infrastructure\">web infrastructure</a> improves, so do hackers’ methods. While it is nearly impossible to eliminate all threats, you can greatly reduce your business’ exposure to hackers by establishing a strong <a target=\"_blank\" href=\"https://securityscorecard.com/blog/what-is-a-cybersecurity-posture#:~:text=Cybersecurity%20posture%20refers%20to%20an,from%20malware%20to%20anti%2Dvirus.\">cybersecurity posture</a>, an industry term that refers to a system’s effectiveness."
+                        }
+                    },
+                    {
+                        "id": "8m7YQxxIuq",
+                        "type": "image",
+                        "data": {
+                            "file": {
+                                "url": "https://blogpost-resources-007.s3.ap-south-1.amazonaws.com/Hx26ld5fMv2I7uJt0ulhP-1747160074629.jpeg"
+                            },
+                            "caption": "Fig&nbsp;1: Payment Details",
+                            "withBorder": false,
+                            "stretched": false,
+                            "withBackground": false
+                        }
+                    },
+                    {
+                        "id": "nghE0pwtiS",
+                        "type": "header",
+                        "data": {
+                            "text": "The most common cybersecurity threats to small businesses",
+                            "level": 2
+                        }
+                    },
+                    {
+                        "id": "6aQ_8nCWSc",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "According to a Small Business Administration <a target=\"_blank\" href=\"https://www.sba.gov/blog/protect-your-small-business-cybersecurity-attacks\">survey</a>, 88% of small business owners feel vulnerable to cyber attacks. And they are—hackers target smaller enterprises for two primary reasons: One, because they know that small companies are often vulnerable without the resources of an IT team, and two, small businesses may also have partnerships with larger companies, providing a direct pathway for hackers to breach through their <a target=\"_blank\" href=\"https://www.wix.com/encyclopedia/definition/computer-security\">computer security </a>and reach their sensitive data. "
+                        }
+                    },
+                    {
+                        "id": "ZRTJs3yyY5",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "To effectively protect your company and customer information, you need to understand three primary cybersecurity threats to small businesses: \n\n"
+                        }
+                    },
+                    {
+                        "id": "yeofilm_jc",
+                        "type": "header",
+                        "data": {
+                            "text": "Malware attacks",
+                            "level": 3
+                        }
+                    },
+                    {
+                        "id": "07nHmXKW2y",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "<a target=\"_blank\" href=\"https://www.wix.com/encyclopedia/definition/malware\">Malware</a> includes a variety of cyber threats such as trojans and viruses. In these attacks, hackers use code to break into private networks with the intention of stealing or destroying data. Malware attacks usually originate from fraudulent downloads, spam emails or from connecting to other infected devices, potentially costing businesses an excessive amount of money to repair. \n "
+                        }
+                    },
+                    {
+                        "id": "EEhQX-0Vrj",
+                        "type": "header",
+                        "data": {
+                            "text": "Ransomware",
+                            "level": 3
+                        }
+                    },
+                    {
+                        "id": "qVe_gsS8A-",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "According to <a target=\"_blank\" href=\"https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-040a\">CISA</a>, ransomware threats significantly increased in 2021. Hackers usually inflict computers through email, and can result in significant damage and expenses. As the name suggests, <a target=\"_blank\" href=\"https://www.wix.com/encyclopedia/definition/ransomware\">ransomware attacks</a> hold a victim’s sensitive data, such as passwords, files, or databases, for ransom. Hackers require the money to be paid within 24-48 hours or they will destroy or leak the data. \n"
+                        }
+                    },
+                    {
+                        "id": "FmDiNOTMoj",
+                        "type": "header",
+                        "data": {
+                            "text": "Phishing\n",
+                            "level": 3
+                        }
+                    },
+                    {
+                        "id": "waaEhMLNHS",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "<a target=\"_blank\" href=\"https://www.wix.com/encyclopedia/definition/phishing\">Phishing</a> is when a hacker sends a fraudulent email or direct message to company employees with a malicious link. In fact, members of an organization and work emails are a<a target=\"_blank\" href=\"https://www.sba.gov/blog/protect-your-small-business-cybersecurity-attacks\"> leading cause </a>of small business data breaches because they provide a direct pathway into business networks. "
+                        }
+                    },
+                    {
+                        "id": "JzZvEuJ8um",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "Phishing attacks can result in data leaks, system freezes or virus installations. According to the <a target=\"_blank\" href=\"https://www.ic3.gov/Media/PDF/AnnualReport/2020_IC3Report.pdf\">FBI’s 2020 Internet Crime Report</a>, a rise in these attacks caused adjusted losses of $54 million in that year alone."
+                        }
+                    },
+                    {
+                        "id": "fFQT53gTlh",
+                        "type": "image",
+                        "data": {
+                            "file": {
+                                "url": "https://blogpost-resources-007.s3.ap-south-1.amazonaws.com/cbXEIM6kbcb0d-_jRr8ea-1747160227857.jpeg"
+                            },
+                            "caption": "",
+                            "withBorder": false,
+                            "stretched": false,
+                            "withBackground": false
+                        }
+                    },
+                    {
+                        "id": "5WkEgCQneX",
+                        "type": "header",
+                        "data": {
+                            "text": "How can small businesses protect themselves? ",
+                            "level": 2
+                        }
+                    },
+                    {
+                        "id": "ohC9fKa4vI",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "As mentioned earlier, small businesses arguably suffer from cyber attacks more than larger enterprises because they lack the resources needed to recover. In fact, <a target=\"_blank\" href=\"https://www.inc.com/joe-galvin/60-percent-of-small-businesses-fold-within-6-months-of-a-cyber-attack-heres-how-to-protect-yourself.html\">60% of small businesses</a> close within six months of an attack. "
+                        }
+                    },
+                    {
+                        "id": "-UX-1U1CQD",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "Before describing how small businesses can defend themselves, we’ll first discuss the CIA Triad, a widely-accepted model that serves as the basis for modern cybersecurity standards. \n\n"
+                        }
+                    },
+                    {
+                        "id": "iey41yz-MG",
+                        "type": "header",
+                        "data": {
+                            "text": "What is the CIA Triad?",
+                            "level": 3
+                        }
+                    },
+                    {
+                        "id": "_9EAev1NSB",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "The CIA Triad defines three vital components: confidentiality, integrity and availability. Every cyber attack attempts to breach at least one of these attributes, and the relationship between them provides guidance and security standards for how information systems should operate."
+                        }
+                    },
+                    {
+                        "id": "jVQHKXFPys",
+                        "type": "list",
+                        "data": {
+                            "style": "unordered",
+                            "items": [
+                                "<b>Confidentiality</b>: All sensitive business data should be kept confidential and accessible by authorized users only.",
+                                "<b>Integrity</b>: Proper measures should be taken to ensure that system data is reliable and trustworthy.",
+                                "<b>Availability</b>: All authorized personnel must be able to access the network and its data at any given time. This means that businesses need to continuously monitor network security and system functionality.&nbsp;&nbsp;"
+                            ]
+                        }
+                    },
+                    {
+                        "id": "UvXekjTool",
+                        "type": "image",
+                        "data": {
+                            "file": {
+                                "url": "https://blogpost-resources-007.s3.ap-south-1.amazonaws.com/t05luQ0Qm4X0yvyZE6eqR-1747160401541.jpeg"
+                            },
+                            "caption": "",
+                            "withBorder": false,
+                            "stretched": false,
+                            "withBackground": false
+                        }
+                    },
+                    {
+                        "id": "HxAjP6ix_e",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "To better understand the relationship between these terms, here’s an example of the CIA Triad in play for someone running a successful <a target=\"_blank\" href=\"https://www.wix.com/ecommerce/website\">eCommerce website</a>: "
+                        }
+                    },
+                    {
+                        "id": "XkhnL4xN4n",
+                        "type": "list",
+                        "data": {
+                            "style": "unordered",
+                            "items": [
+                                "<b>Confidentiality:</b> To log into the account, the business owner needs to enter their username and password. If they forget their credentials, they can take advantage of two-factor authentication, which sends users a code to reset their password.\n",
+                                "<b>Integrity:</b> Once logged in, they have access to accurate, unaltered personal and customer data. \n",
+                                "<b>Availability:</b> Lastly, the business owner and their customers can access the store at any time because of its 24/7 online availability."
+                            ]
+                        }
+                    },
+                    {
+                        "id": "nDKnASBdA8",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "\n\nThe NIST Cybersecurity Framework"
+                        }
+                    },
+                    {
+                        "id": "D8dXxcEpht",
+                        "type": "paragraph",
+                        "data": {
+                            "text": "The NIST, or the National Institute of Standards and Technology, is a department within the US Department of Commerce that helps businesses increase their cybersecurity posture. Using the CIA Triad as a guide, the department established the <a target=\"_blank\" href=\"https://www.ftc.gov/system/files/attachments/cybersecurity-small-business/cybersecuirty_sb_factsheets_all.pdf\">NIST Cybersecurity Framework</a>, a five-step system for small businesses to defend their information security systems:"
+                        }
+                    }
+                ],
+                "version": "2.31.0-rc.7"
+            }
+        ],
+        "tags": [
+            "auth",
+            "tech"
+        ],
+        "author": {
+            "personal_info": {
+                "fullname": "animesh maiti",
+                "username": "animesh14",
+                "profile_img": "https://blogpost-resources-007.s3.ap-south-1.amazonaws.com/lje3toCYlE0FDgXciTL-r-1750139228224.png"
+            },
+            "_id": "6806680425648a83749acf98"
+        },
+        "publishedAt": "2025-05-13T18:22:55.197Z",
+        "comments": []
     }
-}
+]
